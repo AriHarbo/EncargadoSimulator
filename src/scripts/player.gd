@@ -7,13 +7,27 @@ var rotation_x := 0.0
 
 @onready var raycast = $Camera3D/RayCast3D
 @onready var cam = $Camera3D
-var initial_raycast_rotation: Vector3
+@onready var grab_point = $GrabPoint
+
+var grabbed_object: RigidBody3D = null  # Objeto agarrado
+var grab_distance: float = 3.0  # Distancia inicial del agarre
+var grab_smoothness: float = 10.0  # Fuerza para mover el objeto hacia el punto de agarre
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _process(delta: float) -> void:
-	pass
+	if grabbed_object:
+		# Mover el punto de agarre con el mouse
+		var mouse_position = get_viewport().get_mouse_position()
+		var ray_origin = cam.project_ray_origin(mouse_position)
+		var ray_direction = cam.project_ray_normal(mouse_position)
+		grab_point.global_transform.origin = ray_origin + ray_direction * grab_distance
+
+		# Mover el objeto agarrado hacia el punto de agarre
+		var target_position = grab_point.global_transform.origin
+		var current_position = grabbed_object.global_transform.origin
+		grabbed_object.global_transform.origin = current_position.lerp(target_position, grab_smoothness * delta)
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -33,14 +47,23 @@ func _input(event: InputEvent) -> void:
 		rotation_x = clamp(rotation_x, deg_to_rad(-90), deg_to_rad(90))  # Limitar visión arriba/abajo
 		cam.rotation.x = rotation_x
 	
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("click!")
-		if raycast.is_colliding():
-			print("raycast colliding!")
-			var collided_object = raycast.get_collider()
-			print("objeto: ", collided_object)
-			if collided_object.is_in_group("Trash"):
-				collided_object.queue_free()
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				# Agarrar el objeto
+				if raycast.is_colliding():
+					var collided_object = raycast.get_collider()
+					if collided_object.is_in_group("Trash"):
+						grabbed_object = collided_object
+						grab_distance = raycast.global_transform.origin.distance_to(grabbed_object.global_transform.origin)
+						grabbed_object.gravity_scale = 0.0  # Desactivar gravedad
+						grabbed_object.linear_velocity = Vector3.ZERO  # Detener el movimiento
+						grabbed_object.angular_velocity = Vector3.ZERO 
+			else:
+				# Soltar el objeto
+				if grabbed_object:
+					grabbed_object.gravity_scale = 1.0  # Reactivar gravedad
+					grabbed_object = null  # Dejar de agarrar el objeto
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()
 func movement(delta: float) -> void:
