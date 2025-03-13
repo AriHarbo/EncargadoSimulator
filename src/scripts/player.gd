@@ -5,11 +5,15 @@ const JUMP_VELOCITY = 4.5
 var sens := 0.1
 var rotation_x := 0.0
 
-@onready var raycast = $RayCast3D
-@onready var cam = $Camera3D  # Ahora la cámara está dentro del Player
+@onready var raycast = $Camera3D/RayCast3D
+@onready var cam = $Camera3D
+var initial_raycast_rotation: Vector3
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _process(delta: float) -> void:
+	pass
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -37,7 +41,8 @@ func _input(event: InputEvent) -> void:
 			print("objeto: ", collided_object)
 			if collided_object.is_in_group("Trash"):
 				collided_object.queue_free()
-
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		get_tree().quit()
 func movement(delta: float) -> void:
 	var input_dir = Vector3.ZERO
 	if Input.is_action_pressed("move_up"):

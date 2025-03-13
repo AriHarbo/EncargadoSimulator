@@ -32,7 +32,7 @@ transform = Transform3D(1, 0, 0, 0, 0.999993, 0, 0, 0, 0.999993, -0.00134278, 0,
 shape = SubResource("BoxShape3D_rdlyd")
 
 [node name="Player" parent="." instance=ExtResource("1_rdlyd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.20227, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.70213, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.999998, 0.00176278, 0, -0.00176278, 0.999998, 0, 0, 0, 1, 1.96071, 1.18373, 9.4046)

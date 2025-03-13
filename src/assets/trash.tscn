@@ -13,6 +13,8 @@ albedo_color = Color(0, 0, 0, 1)
 radius = 0.500626
 
 [node name="Trash" type="RigidBody3D" groups=["basura"]]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_0guov")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -23,6 +25,8 @@ mesh = SubResource("SphereMesh_g5lo5")
 surface_material_override/0 = SubResource("StandardMaterial3D_0guov")
 
 [node name="Area3D" type="Area3D" parent="." groups=["basura"]]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0152344, 0, 0)
