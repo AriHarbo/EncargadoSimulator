@@ -11,9 +11,8 @@ var rotation_x := 0.0
 
 var grabbed_object: RigidBody3D = null  # Objeto agarrado
 var grab_distance: float = 3.0  # Distancia inicial del agarre
-var grab_smoothness: float = 10.0  # Fuerza para mover el objeto hacia el punto de agarre
-var previous_position: Vector3 = Vector3.ZERO  # Posición anterior del objeto agarrado
-var object_velocity: Vector3 = Vector3.ZERO  # Velocidad calculada del objeto
+var grab_strength: float = 50.0  # Fuerza de agarre
+var damping: float = 5.0  # Amortiguación para evitar oscilaciones
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -26,13 +25,19 @@ func _process(delta: float) -> void:
 		var ray_direction = cam.project_ray_normal(mouse_position)
 		grab_point.global_transform.origin = ray_origin + ray_direction * grab_distance
 
-		# Mover el objeto agarrado hacia el punto de agarre
+		# Calcular la fuerza para mover el objeto hacia el punto de agarre
 		var target_position = grab_point.global_transform.origin
 		var current_position = grabbed_object.global_transform.origin
-		grabbed_object.global_transform.origin = current_position.lerp(target_position, grab_smoothness * delta)
-		# Calcular la velocidad del objeto basada en su movimiento
-		object_velocity = (grabbed_object.global_transform.origin - previous_position) / delta
-		previous_position = grabbed_object.global_transform.origin  # Actualizar la posición anterior
+		var direction = (target_position - current_position).normalized()
+		var distance = target_position.distance_to(current_position)
+
+		# Aplicar fuerza hacia el punto de agarre
+		var force = direction * distance * grab_strength
+		grabbed_object.apply_central_force(force)
+
+		# Aplicar amortiguación para reducir la velocidad del objeto
+		var velocity = grabbed_object.linear_velocity
+		grabbed_object.apply_central_force(-velocity * damping)
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -44,7 +49,6 @@ func _physics_process(delta: float) -> void:
 	movement(delta)
 	move_and_slide()
 
-
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * sens))  # Rotación horizontal
@@ -52,7 +56,7 @@ func _input(event: InputEvent) -> void:
 		rotation_x = clamp(rotation_x, deg_to_rad(-90), deg_to_rad(90))  # Limitar visión arriba/abajo
 		cam.rotation.x = rotation_x
 	
-	#AGARRE DE COSAS
+	# AGARRE DE COSAS
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
@@ -62,24 +66,19 @@ func _input(event: InputEvent) -> void:
 					if collided_object.is_in_group("Trash"):
 						grabbed_object = collided_object
 						grab_distance = raycast.global_transform.origin.distance_to(grabbed_object.global_transform.origin)
-						grabbed_object.gravity_scale = 0.0  # Desactivar gravedad
+						grabbed_object.gravity_scale = 0.0  # Desactivar gravedad temporalmente
 						grabbed_object.linear_velocity = Vector3.ZERO  # Detener el movimiento
 						grabbed_object.angular_velocity = Vector3.ZERO
-						previous_position = grabbed_object.global_transform.origin  # Guardar la posición inicial 
 			else:
 				# Soltar el objeto
 				if grabbed_object:
 					grabbed_object.gravity_scale = 1.0  # Reactivar gravedad
-					grabbed_object.linear_velocity = object_velocity  # Aplicar la velocidad calculada
 					grabbed_object = null  # Dejar de agarrar el objeto
 		
 		# CERRAR EL JUEGO CON ESCAPE
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()
-		
-		#
-		# MOVIMIENTO DEL PERSONAJE
-		#
+
 func movement(delta: float) -> void:
 	var input_dir = Vector3.ZERO
 	if Input.is_action_pressed("move_up"):
