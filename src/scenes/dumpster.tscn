@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://j7mxwraa581y" path="res://src/scripts/dumpster.gd" id="2_xwpcs"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_m2qod"]
-size = Vector3(0.335714, 0.00976563, 0.662384)
+size = Vector3(0.247468, 0.00976563, 0.559605)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xwpcs"]
 size = Vector3(0.0275879, 1.08032, 1.46336)
@@ -32,7 +32,7 @@ collision_mask = 3
 script = ExtResource("2_xwpcs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
-transform = Transform3D(2, 0, 0, 0, 10, 0, 0, 0, 2, -0.0292225, 0.772608, -0.0715027)
+transform = Transform3D(2, 0, 0, 0, 10, 0, 0, 0, 2, -0.0172966, 0.148567, -0.0606576)
 shape = SubResource("BoxShape3D_m2qod")
 
 [node name="LargeWall" type="CollisionShape3D" parent="." index="2"]
