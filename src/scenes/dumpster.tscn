@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://u1775i7m7517"]
+
+[ext_resource type="PackedScene" uid="uid://cul3kwce62ysq" path="res://src/assets/dumpster_tex.fbx" id="1_28gcs"]
+[ext_resource type="Script" uid="uid://j7mxwraa581y" path="res://src/scripts/dumpster.gd" id="2_xwpcs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m2qod"]
+size = Vector3(0.335714, 0.00976563, 0.662384)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xwpcs"]
+size = Vector3(0.0275879, 1.08032, 1.46336)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uooge"]
+size = Vector3(0.848785, 0.890625, 0.0112305)
+
+[node name="dumpster" instance=ExtResource("1_28gcs")]
+
+[node name="Cylinder_004" parent="Skeleton3D" index="0"]
+transform = Transform3D(100, 0, 0, 0, -1.19209e-05, 100, 0, -100, -1.19209e-05, -0.0217238, 0.554705, -0.00842229)
+bone_idx = 0
+
+[node name="Cylinder_000" parent="Skeleton3D" index="1"]
+transform = Transform3D(100, 0, 0, 0, -1.19209e-05, 100, 0, -100, -1.19209e-05, 0.382939, 1.14462, -0.0137587)
+bone_idx = 1
+
+[node name="Cylinder_000" parent="Skeleton3D/Cylinder_000" index="0"]
+transform = Transform3D(-0.159761, 0, -0.987156, 0, 1, 0, 0.987156, 0, -0.159761, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00798738, 0)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("2_xwpcs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(2, 0, 0, 0, 10, 0, 0, 0, 2, -0.0292225, 0.772608, -0.0715027)
+shape = SubResource("BoxShape3D_m2qod")
+
+[node name="LargeWall" type="CollisionShape3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.398639, 0.464493, 0.0204086)
+shape = SubResource("BoxShape3D_xwpcs")
+
+[node name="LargeWall2" type="CollisionShape3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.380821, 0.57814, -0.00228882)
+shape = SubResource("BoxShape3D_xwpcs")
+
+[node name="ShortWall" type="CollisionShape3D" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00976694, 0.540092, -0.756935)
+shape = SubResource("BoxShape3D_uooge")
+
+[node name="ShortWall2" type="CollisionShape3D" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00635755, 0.534604, 0.715312)
+shape = SubResource("BoxShape3D_uooge")
+
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]

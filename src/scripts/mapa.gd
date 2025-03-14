@@ -1,7 +1,7 @@
 extends Node3D
 
-var trash_can_scene = preload("res://src/assets/trash_can.tscn")
-var trash_scene = preload("res://src/assets/trash.tscn")
+var trash_can_scene = preload("res://src/scenes/trash_can.tscn")
+var trash_scene = preload("res://src/scenes/trash.tscn")
 
 func _ready():
 	# Instanciar y colocar el tacho de basura
