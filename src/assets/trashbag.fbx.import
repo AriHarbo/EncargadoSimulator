@@ -13,8 +13,8 @@ dest_files=["res://.godot/imported/trashbag.fbx-2be170037fc6a88ba0e7b5d07ecc97b9
 
 [params]
 
-nodes/root_type=""
-nodes/root_name=""
+nodes/root_type="MeshInstance3D"
+nodes/root_name="trashbag"
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
