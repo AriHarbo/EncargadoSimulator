@@ -1,11 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bm37wbyvd2umg"]
+[gd_scene load_steps=4 format=3 uid="uid://bm37wbyvd2umg"]
 
 [ext_resource type="Script" uid="uid://d2bopeui4cnlh" path="res://src/scripts/trash.gd" id="1_7wb1y"]
 [ext_resource type="PackedScene" uid="uid://bxng4ehdm4yef" path="res://src/assets/trashbag.fbx" id="2_7d1pf"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2nd6k"]
-radius = 0.448916
-height = 1.34542
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vfhad"]
 
@@ -14,14 +10,15 @@ collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_7wb1y")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_2nd6k")
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="."]
+depth = 0.19
+polygon = PackedVector2Array(-0.299479, 0.167897, -0.151251, 0.307996, -0.0521899, 0.342866, -0.0218621, 0.356863, -0.115179, 0.415186, -0.0872144, 0.481592, 0.00613278, 0.46651, 0.0737874, 0.461844, 0.108781, 0.429183, 0.0341279, 0.380192, 0.0411264, 0.349864, 0.192766, 0.279877, 0.290748, 0.158565, 0.311745, 0.0535842, 0.323409, -0.12605, 0.30761, -0.324443, 0.302585, -0.427313, -0.285748, -0.417474, -0.326893, -0.277628, -0.310612, -0.192269, -0.320158, -0.0512932)
 
 [node name="trashbag" parent="." instance=ExtResource("2_7d1pf")]
 
 [node name="Area3D" type="Area3D" parent="." groups=["basura"]]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+visible = false
 collision_layer = 2
 collision_mask = 2
 

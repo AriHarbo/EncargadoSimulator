@@ -75,7 +75,7 @@ func _input(event: InputEvent) -> void:
 					grabbed_object.gravity_scale = 1.0  # Reactivar gravedad
 					grabbed_object = null  # Dejar de agarrar el objeto
 		
-		# CERRAR EL JUEGO CON ESCAPE
+	# CERRAR EL JUEGO CON ESCAPE
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()
 

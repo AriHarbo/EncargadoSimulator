@@ -22,24 +22,27 @@ sky = SubResource("Sky_t2iwe")
 [node name="Mapa" type="Node3D"]
 script = ExtResource("1_csrmo")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="building" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="building"]
 transform = Transform3D(31.0965, 0, 0, 0, 1.00281, 0, 0, 0, 22.8987, 0.762654, 0.192965, -0.162717)
 mesh = SubResource("BoxMesh_5oi1x")
+skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="building/MeshInstance3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="building/MeshInstance3D/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.999993, 0, 0, 0, 0.999993, -0.00134278, 0, 0)
 shape = SubResource("BoxShape3D_rdlyd")
-
-[node name="Player" parent="." instance=ExtResource("1_rdlyd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.70213, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_csrmo")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.150157, 0.988662, 0, -0.988662, -0.150157, 0, 0, 0)
+
+[node name="Player" parent="." instance=ExtResource("1_rdlyd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.70213, 0)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -65,4 +68,4 @@ grow_vertical = 2
 script = ExtResource("2_t2iwe")
 
 [node name="dumpster" parent="." instance=ExtResource("4_1sayj")]
-transform = Transform3D(-0.998755, 0, -0.0498783, 0, 1, 0, 0.0498783, 0, -0.998755, -7.5538, 0.72815, -4.88227)
+transform = Transform3D(-1.11542, 0, 0.0248401, 0, 1, 0, -0.022761, 0, -1.21732, -7.5538, 0.72815, -4.88227)
