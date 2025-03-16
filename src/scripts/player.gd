@@ -8,6 +8,7 @@ var rotation_x := 0.0
 @onready var raycast = $Camera3D/RayCast3D
 @onready var cam = $Camera3D
 @onready var grab_point = $GrabPoint
+@onready var interact_cast = $"Camera3D/RayCast_interact-areas"
 
 var grabbed_object: RigidBody3D = null  # Objeto agarrado
 var grab_distance: float = 3.0  # Distancia inicial del agarre
@@ -38,6 +39,8 @@ func _process(delta: float) -> void:
 		# Aplicar amortiguación para reducir la velocidad del objeto
 		var velocity = grabbed_object.linear_velocity
 		grabbed_object.apply_central_force(-velocity * damping)
+
+
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -75,6 +78,11 @@ func _input(event: InputEvent) -> void:
 					grabbed_object.gravity_scale = 1.0  # Reactivar gravedad
 					grabbed_object = null  # Dejar de agarrar el objeto
 		
+	# INTERACTUAR CON PUERTA
+	if Input.is_action_just_pressed("interact"):
+		var interacted = interact_cast.get_collider()
+		if interacted != null and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
+			interacted.action_use()
 	# CERRAR EL JUEGO CON ESCAPE
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()

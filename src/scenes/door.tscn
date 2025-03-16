@@ -1,0 +1,74 @@
+[gd_scene load_steps=8 format=3 uid="uid://crnaf7io0rxdo"]
+
+[ext_resource type="Script" uid="uid://dh5xm8had6weg" path="res://src/scripts/interact_door.gd" id="1_nxxn5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_4yji4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_80g33"]
+size = Vector3(1, 0.613251, 0.001)
+
+[sub_resource type="Animation" id="Animation_nxxn5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_4yji4"]
+resource_name = "openClose"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.5708]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_80g33"]
+_data = {
+&"RESET": SubResource("Animation_nxxn5"),
+&"openClose": SubResource("Animation_4yji4")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nxxn5"]
+size = Vector3(1, 1.00415, 1)
+
+[node name="interact_door" type="Area3D" groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_nxxn5")
+
+[node name="door" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="door"]
+transform = Transform3D(1, 0, 0, 0, 2.04355, 0, 0, 0, 0.127847, 0.5, 0, 0)
+mesh = SubResource("BoxMesh_4yji4")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="door/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="door/MeshInstance3D/StaticBody3D"]
+transform = Transform3D(0.9, 0, 0, 0, 1.84, 0, 0, 0, 0.115, 0, 0.103292, 0.0574425)
+shape = SubResource("BoxShape3D_80g33")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_80g33")
+}
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 2.04355, 0, 0, 0, 0.127847, 0.5, 0.00424075, 0)
+shape = SubResource("BoxShape3D_nxxn5")
