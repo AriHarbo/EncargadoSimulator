@@ -19,7 +19,7 @@ shape = SubResource("CapsuleShape3D_0wdt2")
 transform = Transform3D(1, 0, 0, 0, 0.999799, 0.0200346, 0, -0.0200346, 0.999799, 0.0759056, 0.467734, -0.0607415)
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, -0.0400693, -0.999799, 0, 1.9996, -0.0200346, -0.0402842, -0.00156701, 0.0781994)
+transform = Transform3D(1, 0, 0, 0, -0.0458298, -0.999799, 0, 2.28707, -0.0200346, -0.0402842, -0.00156701, 0.0781994)
 collision_mask = 3
 
 [node name="RayCast_interact-areas" type="RayCast3D" parent="Camera3D"]
