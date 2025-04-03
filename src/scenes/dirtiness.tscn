@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://rjj1junjy0u8"]
+
+[ext_resource type="Script" uid="uid://bjd3p40ih6y3f" path="res://src/scripts/dirtiness.gd" id="1_wldva"]
+[ext_resource type="Script" uid="uid://xv3n2hq58ujv" path="res://src/scripts/area3d_dirt.gd" id="2_f6qwf"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_xel2b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wldva"]
+albedo_color = Color(0, 0.0666667, 0, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_f6qwf"]
+radius = 0.616894
+
+[node name="dirtiness" type="Node3D"]
+script = ExtResource("1_wldva")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.67583, 0, 0, 0, 0.0814763, 0, 0, 0, 1.34758, -0.106297, 0, 0)
+mesh = SubResource("SphereMesh_xel2b")
+surface_material_override/0 = SubResource("StandardMaterial3D_wldva")
+
+[node name="Area3D" type="Area3D" parent="."]
+script = ExtResource("2_f6qwf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1.3829, 0, 0, 0, 0.0714327, 0, 0, 0, 1.09403, -0.110852, 0.000454426, 0)
+shape = SubResource("SphereShape3D_f6qwf")
