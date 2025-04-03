@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dae78dvv8hlq5"]
+[gd_scene load_steps=5 format=3 uid="uid://dae78dvv8hlq5"]
 
 [ext_resource type="Script" uid="uid://cs0j6kdrjcpva" path="res://src/scripts/player.gd" id="1_0wdt2"]
+[ext_resource type="Script" uid="uid://b3lyrm78sfhub" path="res://src/scripts/crosshair.gd" id="2_v14g5"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7sgbr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0wdt2"]
+radius = 0.356359
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_0wdt2")
@@ -16,15 +18,34 @@ mesh = SubResource("CapsuleMesh_7sgbr")
 shape = SubResource("CapsuleShape3D_0wdt2")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999799, 0.0200346, 0, -0.0200346, 0.999799, 0.0759056, 0.467734, -0.0607415)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, -0.0458298, -0.999799, 0, 2.28707, -0.0200346, -0.0402842, -0.00156701, 0.0781994)
+transform = Transform3D(1, 0, 0, 0, -9.99911e-08, -1, 0, 2.28753, -4.37114e-08, 0, 0, 0)
 collision_mask = 3
 
 [node name="RayCast_interact-areas" type="RayCast3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, -0.0400693, -0.999799, 0, 1.9996, -0.0200346, 0.0324751, -0.00156701, 0.0781994)
+transform = Transform3D(1, 0, 0, 0, -8.74228e-08, -1, 0, 2, -4.37114e-08, 0, 0, 0)
+collision_mask = 2
 collide_with_areas = true
 
 [node name="GrabPoint" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="TextureRect" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_v14g5")

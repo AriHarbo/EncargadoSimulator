@@ -39,6 +39,7 @@ _data = {
 
 [node name="interact_door" type="Area3D" groups=["Interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 2
 script = ExtResource("1_nxxn5")
 
 [node name="door" type="Node3D" parent="."]

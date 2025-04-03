@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bt02n2pltoch5"]
+
+[ext_resource type="Script" uid="uid://cbhq2xwd2iqqw" path="res://src/scenes/elevator.gd" id="1_0nmn3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yrkqt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_yrkqt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0nmn3"]
+size = Vector3(1, 14.4823, 0.999268)
+
+[node name="Elevator" type="Node3D"]
+script = ExtResource("1_0nmn3")
+
+[node name="ElevatorPlatform" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ElevatorPlatform"]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
+shape = SubResource("BoxShape3D_yrkqt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
+mesh = SubResource("BoxMesh_yrkqt")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0.773869, -0.000366211)
+shape = SubResource("BoxShape3D_0nmn3")

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
-[ext_resource type="Script" uid="uid://b3lyrm78sfhub" path="res://src/scripts/crosshair.gd" id="2_t2iwe"]
+[ext_resource type="PackedScene" uid="uid://bt02n2pltoch5" path="res://src/scenes/Elevator.tscn" id="3_a214w"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/dumpster.tscn" id="4_1sayj"]
 [ext_resource type="PackedScene" uid="uid://crnaf7io0rxdo" path="res://src/scenes/door.tscn" id="5_t4667"]
 
@@ -45,6 +45,9 @@ transform = Transform3D(-0.0390681, 0, 0.999236, 0, 1, 0, -0.999236, 0, -0.03906
 [node name="door3" parent="building" instance=ExtResource("5_t4667")]
 transform = Transform3D(0.997663, 0, 0.0683289, 0, 1, 0, -0.0683289, 0, 0.997663, -1.25762, 1.71614, -5.53221)
 
+[node name="Elevator" parent="building" instance=ExtResource("3_a214w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.29975, 0.639537, -13.1701)
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_csrmo")
 
@@ -52,30 +55,7 @@ environment = SubResource("Environment_csrmo")
 transform = Transform3D(1, 0, 0, 0, -0.150157, 0.988662, 0, -0.988662, -0.150157, 0, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("1_rdlyd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.70213, 0)
-
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Crosshair" type="TextureRect" parent="UI"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_t2iwe")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.42664, 1.70213, -10.686)
 
 [node name="dumpster" parent="." instance=ExtResource("4_1sayj")]
 transform = Transform3D(-1.11542, 0, 0.0248401, 0, 1, 0, -0.022761, 0, -1.21732, -7.5538, 0.72815, -4.88227)

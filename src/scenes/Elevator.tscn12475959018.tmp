@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3 uid="uid://bt02n2pltoch5"]
+
+[ext_resource type="PackedScene" uid="uid://dbln36dnvapxe" path="res://src/scenes/elevator_button.tscn" id="1_0nmn3"]
+[ext_resource type="Script" uid="uid://cbhq2xwd2iqqw" path="res://src/scripts/elevator.gd" id="1_b2x45"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yrkqt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_yrkqt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0nmn3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0nmn3"]
+size = Vector3(1, 14.4823, 0.999268)
+
+[node name="Elevator" type="Node3D"]
+script = ExtResource("1_b2x45")
+
+[node name="ElevatorPlatform" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ElevatorPlatform"]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
+shape = SubResource("BoxShape3D_yrkqt")
+
+[node name="elevator_model" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
+mesh = SubResource("BoxMesh_yrkqt")
+
+[node name="elevator_panel" type="MeshInstance3D" parent="elevator_model"]
+transform = Transform3D(0.098502, 0, 0, 0, 15.2219, 0, 0, 0, 0.198349, 0.387449, 8.07701, 0.250229)
+mesh = SubResource("BoxMesh_0nmn3")
+
+[node name="ElevatorButton" parent="elevator_model/elevator_panel" instance=ExtResource("1_0nmn3")]
+transform = Transform3D(-0.219201, 0, -3.38087, 0, 0.656949, 0, 2.51846, 0, -0.0725716, -0.650024, 0.399831, 0.152847)
+floor_number = 0
+elevator_path = NodePath("")
+button_color = Color(1, 0, 0, 1)
+
+[node name="ElevatorButton2" parent="elevator_model/elevator_panel" instance=ExtResource("1_0nmn3")]
+transform = Transform3D(-0.219201, 0, -3.38087, 0, 0.656949, 0, 2.51846, 0, -0.0725716, -0.650024, 0.400739, -0.165887)
+floor_number = 1
+elevator_path = NodePath("")
+button_color = Color(1, 0, 0, 1)
+
+[node name="ElevatorButton3" parent="elevator_model/elevator_panel" instance=ExtResource("1_0nmn3")]
+transform = Transform3D(-0.219201, 0, -3.38087, 0, 0.656949, 0, 2.51846, 0, -0.0725716, -0.650024, 0.316352, -0.171822)
+floor_number = 2
+elevator_path = NodePath("")
+button_color = Color(1, 0, 0, 1)
+
+[node name="ElevatorButton4" parent="elevator_model/elevator_panel" instance=ExtResource("1_0nmn3")]
+transform = Transform3D(-0.219201, 0, -3.38087, 0, 0.656949, 0, 2.51846, 0, -0.0725716, -0.650024, 0.309465, 0.160556)
+floor_number = 3
+elevator_path = NodePath("")
+button_color = Color(1, 0, 0, 1)
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0.773869, -0.000366211)
+shape = SubResource("BoxShape3D_0nmn3")
