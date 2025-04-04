@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dbj43wgii248i"
+path="res://.godot/imported/broomAsset.obj-9000274a7f9e9a83d9d8a1c61f297cba.mesh"
+
+[deps]
+
+files=["res://.godot/imported/broomAsset.obj-9000274a7f9e9a83d9d8a1c61f297cba.mesh"]
+
+source_file="res://src/assets/broomAsset.obj"
+dest_files=["res://.godot/imported/broomAsset.obj-9000274a7f9e9a83d9d8a1c61f297cba.mesh", "res://.godot/imported/broomAsset.obj-9000274a7f9e9a83d9d8a1c61f297cba.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

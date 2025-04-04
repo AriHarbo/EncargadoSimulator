@@ -1,8 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://dip35k3r165k6"]
 
 [ext_resource type="Script" uid="uid://cctroaqv1k7gh" path="res://src/scripts/broom.gd" id="1_kcay2"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_m7gpi"]
+[ext_resource type="ArrayMesh" uid="uid://dbj43wgii248i" path="res://src/assets/broomAsset.obj" id="2_m2pbu"]
 
 [sub_resource type="Shader" id="Shader_kcay2"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.4.stable's StandardMaterial3D.
@@ -69,16 +68,6 @@ size = Vector3(0.0822144, 1.97264, 0.0669403)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ca0re"]
 size = Vector3(0.0802002, 1.64856, 0.059082)
 
-[sub_resource type="Animation" id="Animation_kcay2"]
-resource_name = "cleaning_animation"
-tracks/0/type = "rotation_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.333333, 1, 0, 0, 0.290176, 0.956973, 0.666667, 1, 0, 0, -0.284392, 0.958708, 1, 1, 0, 0, 0, 1)
-
 [sub_resource type="Animation" id="Animation_m2pbu"]
 length = 0.001
 tracks/0/type = "rotation_3d"
@@ -89,6 +78,16 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 
+[sub_resource type="Animation" id="Animation_kcay2"]
+resource_name = "cleaning_animation"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.333333, 1, 0, 0, 0.290176, 0.956973, 0.666667, 1, 0, 0, -0.284392, 0.958708, 1, 1, 0, 0, 0, 1)
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sgaj5"]
 _data = {
 &"RESET": SubResource("Animation_m2pbu"),
@@ -96,22 +95,23 @@ _data = {
 }
 
 [node name="Broom" type="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04639, 0)
 script = ExtResource("1_kcay2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.0719863, 0, 0, 0, 1.97004, 0, 0, 0, 0.063952, -0.0348196, 0.167754, 0)
-mesh = SubResource("BoxMesh_m7gpi")
+transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0.821645, -0.113356, 0.0242298)
+mesh = ExtResource("2_m2pbu")
 surface_material_override/0 = SubResource("ShaderMaterial_m2pbu")
 
 [node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.749067, 0, 0, 0, 1, 0, 0.471994, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0370789, 0.171237, -0.000984192)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0370789, 0.15767, -0.000984192)
 shape = SubResource("BoxShape3D_sgaj5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999788, -0.0206109, 0, 0.0206109, 0.999788, -0.0247192, 0.32428, 0.00805664)
+transform = Transform3D(1, 0, 0, 0, 0.88909, 0, 0, 0, 1, -0.0332166, 0.58614, -9.31323e-10)
 shape = SubResource("BoxShape3D_ca0re")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

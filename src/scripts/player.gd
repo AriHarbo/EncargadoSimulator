@@ -119,20 +119,33 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()
 
-# 🧹 Equipar escoba
 func equip_broom(broom: RigidBody3D) -> void:
 	busy_hand = broom
-	broom.freeze = true  # Congelar físicas
-	broom.reparent(self)  # Hacer la escoba hija del jugador
-	broom.global_transform = hand_position.global_transform  # Colocarla en la mano
-	broom.rotation_degrees = Vector3(0, 90, 0)  # Ajustar la orientación
+	
+	broom.freeze = true  
+	broom.set_collision_layer_value(1, false)
+	broom.set_collision_mask_value(1, false)
 
-# 🧹 Soltar escoba
-func drop_broom() -> void:
-	busy_hand.reparent(get_tree().current_scene)  # Liberarla al mundo
-	busy_hand.global_transform = hand_position.global_transform  # Mantener su posición
-	busy_hand.freeze = false  # Reactivar físicas
-	busy_hand = null
+	broom.reparent(self)
+
+	# 👉 Posicionamiento: más cerca del jugador y mejor alineada
+	var new_transform = hand_position.global_transform
+	new_transform.origin += hand_position.global_transform.basis * Vector3(0.3, -0.4, 0.5)
+	broom.set_global_transform(new_transform)
+
+	# 🔄 Rotación: inclinarla correctamente para que apunte hacia el centro
+	broom.rotation_degrees = Vector3(-20, 170, 10)
+
+func drop_broom():
+	if busy_hand:
+		busy_hand.reparent(get_tree().current_scene)  # Volver a la escena principal
+		busy_hand.freeze = false  # Reactivar físicas
+		
+		# Reactivar colisiones
+		busy_hand.set_collision_layer_value(1, true)
+		busy_hand.set_collision_mask_value(1, true)
+
+		busy_hand = null
 	
 signal broom_sweep
 	
