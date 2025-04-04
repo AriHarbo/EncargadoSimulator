@@ -63,7 +63,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.42664, 1.70213, -10.686)
 transform = Transform3D(-1.11542, 0, 0.0248401, 0, 1, 0, -0.022761, 0, -1.21732, -7.5538, 0.72815, -4.88227)
 
 [node name="Broom" parent="." instance=ExtResource("6_a214w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.41949, 1.51163, 4.18294)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.434819, 1.0941, -8.69751)
 
 [node name="dirtiness" parent="." instance=ExtResource("7_up4k5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.7, 0)
