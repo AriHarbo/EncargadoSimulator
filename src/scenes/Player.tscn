@@ -34,6 +34,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -49,5 +50,6 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_v14g5")
+
 [node name="HandPosition" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.995663, 0.093031, 0, -0.093031, 0.995663, 0.488686, 0.188463, -0.601877)

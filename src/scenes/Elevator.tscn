@@ -15,16 +15,6 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6ycfg"]
 
-[sub_resource type="Animation" id="Animation_b2x45"]
-resource_name = "close_doors"
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ElevatorMesh/door")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, -0.954964, 9.82658, 0.479165, 1, 1, 0, 9.827, 0.479)
-
 [sub_resource type="Animation" id="Animation_6ycfg"]
 length = 0.001
 tracks/0/type = "position_3d"
@@ -34,6 +24,16 @@ tracks/0/path = NodePath("ElevatorMesh/door")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, -0.954964, 9.82658, 0.479165)
+
+[sub_resource type="Animation" id="Animation_b2x45"]
+resource_name = "close_doors"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ElevatorMesh/door")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, -0.954964, 9.82658, 0.479165, 1, 1, 0, 9.827, 0.479)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6ycfg"]
 _data = {
