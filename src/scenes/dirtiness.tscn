@@ -20,7 +20,6 @@ mesh = SubResource("SphereMesh_xel2b")
 surface_material_override/0 = SubResource("StandardMaterial3D_wldva")
 
 [node name="Area3D" type="Area3D" parent="."]
-collision_layer = 2
 script = ExtResource("2_f6qwf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
