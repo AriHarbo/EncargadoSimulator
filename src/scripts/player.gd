@@ -17,6 +17,7 @@ var grab_strength: float = 50.0  # Fuerza de agarre
 var damping: float = 5.0  # Amortiguación para evitar oscilaciones
 
 var busy_hand: RigidBody3D = null  # 📌 Nuevo: Para almacenar objeto equipada
+var broom_equipped: RigidBody3D = null  # Variable para almacenar la escoba equipada
 var broom_on_cooldown = false  # Variable para controlar el tiempo de espera
 
 func _ready() -> void:
@@ -43,8 +44,6 @@ func _process(delta: float) -> void:
 		# Aplicar amortiguación para reducir la velocidad del objeto
 		var velocity = grabbed_object.linear_velocity
 		grabbed_object.apply_central_force(-velocity * damping)
-
-
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -78,7 +77,6 @@ func _input(event: InputEvent) -> void:
 		if busy_hand and busy_hand.is_in_group("brooms") and not broom_on_cooldown:
 			broom_on_cooldown = true  # Activa el cooldown
 			play_broom_animation()  # Reproduce la animación
-
 			if interact_cast.is_colliding():
 				var collided_object = interact_cast.get_collider()
 				print("Colisionando con:", collided_object)  # Debug
@@ -121,20 +119,19 @@ func _input(event: InputEvent) -> void:
 
 func equip_broom(broom: RigidBody3D) -> void:
 	busy_hand = broom
+	broom_equipped = broom  # Guardar referencia para actualizar en _process()
 	
 	broom.freeze = true  
 	broom.set_collision_layer_value(1, false)
 	broom.set_collision_mask_value(1, false)
 
-	broom.reparent(self)
+	broom.reparent(hand_position)  # Hacer que sea hijo de hand_position
 
-	# 👉 Posicionamiento: más cerca del jugador y mejor alineada
-	var new_transform = hand_position.global_transform
-	new_transform.origin += hand_position.global_transform.basis * Vector3(0.3, -0.4, 0.5)
-	broom.set_global_transform(new_transform)
+	# 👉 Posicionar cerca del jugador y alinearla mejor
+	broom.transform.origin = Vector3(-0.1, -0.4, 0.9) 
 
-	# 🔄 Rotación: inclinarla correctamente para que apunte hacia el centro
-	broom.rotation_degrees = Vector3(-20, 170, 10)
+	# 🔄 Rotación inicial para que apunte al centro
+	broom.rotation_degrees = Vector3(-35, 0, 10)
 
 func drop_broom():
 	if busy_hand:
