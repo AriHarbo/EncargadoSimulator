@@ -11,7 +11,6 @@ signal floor_reached(floor_number)
 
 # Referencias a nodos
 @onready var elevator_platform = $ElevatorPlatform
-@onready var buttons_container = $ElevatorPlatform/ButtonsPanel
 @onready var door_animation_player = $ElevatorPlatform/DoorAnimationPlayer
 @onready var floor_display = $ElevatorPlatform/FloorDisplay
 
@@ -27,7 +26,7 @@ func _ready():
 	_setup_floor_buttons()
 	
 	# Mostrar piso actual
-	#_update_floor_display()
+	_update_floor_display()
 
 func _process(delta):
 	if is_moving:
@@ -71,8 +70,8 @@ func _on_floor_button_pressed(floor_num):
 func _arrive_at_floor():
 	is_moving = false
 	current_floor = target_floor
-	#_update_floor_display()
-	#emit_signal("floor_reached", current_floor)
+	_update_floor_display()
+	emit_signal("floor_reached", current_floor)
 	
 	# Abrir puertas
 	_open_doors()
@@ -87,8 +86,8 @@ func _close_doors():
 		door_animation_player.play("close_doors")
 		doors_open = false
 
-#func _update_floor_display():
-	#floor_display.text = str(current_floor)
+func _update_floor_display():
+	floor_display.text = str(current_floor)
 
 # Detector de área para saber cuando el jugador está dentro
 func _on_elevator_area_body_entered(body):
