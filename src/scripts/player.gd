@@ -11,10 +11,10 @@ var rotation_x := 0.0
 @onready var interact_cast = $"Camera3D/RayCast_interact-areas"
 @onready var hand_position = $HandPosition  # 📌 Nuevo: Nodo donde se equipa la escoba
 
-var grabbed_object: RigidBody3D = null  # Objeto agarrado
-var grab_distance: float = 3.0  # Distancia inicial del agarre
-var grab_strength: float = 50.0  # Fuerza de agarre
-var damping: float = 5.0  # Amortiguación para evitar oscilaciones
+var grabbed_object: RigidBody3D = null # Objeto agarrado
+var grab_distance: float = 3.0 # Distancia inicial del agarre
+var grab_strength: float = 100.0 # Fuerza de agarre
+var damping: float = 10.0 # Amortiguación para evitar oscilaciones
 
 var busy_hand: RigidBody3D = null  # 📌 Nuevo: Para almacenar objeto equipada
 var broom_equipped: RigidBody3D = null  # Variable para almacenar la escoba equipada
@@ -30,20 +30,26 @@ func _process(delta: float) -> void:
 		var ray_origin = cam.project_ray_origin(mouse_position)
 		var ray_direction = cam.project_ray_normal(mouse_position)
 		grab_point.global_transform.origin = ray_origin + ray_direction * grab_distance
+		
+		var stiffness = 300.0  # Fuerza del resorte (ajustable)
+		var damping = 40.0     # Amortiguación (frena oscilaciones)
 
-		# Calcular la fuerza para mover el objeto hacia el punto de agarre
-		var target_position = grab_point.global_transform.origin
-		var current_position = grabbed_object.global_transform.origin
-		var direction = (target_position - current_position).normalized()
-		var distance = target_position.distance_to(current_position)
-
-		# Aplicar fuerza hacia el punto de agarre
-		var force = direction * distance * grab_strength
-		grabbed_object.apply_central_force(force)
-
-		# Aplicar amortiguación para reducir la velocidad del objeto
+		# Posición objetivo (grab point)
+		var target_pos = grab_point.global_transform.origin
+		var current_pos = grabbed_object.global_transform.origin
 		var velocity = grabbed_object.linear_velocity
-		grabbed_object.apply_central_force(-velocity * damping)
+
+		var direction = target_pos - current_pos
+		var spring_force = direction * stiffness
+		var damping_force = -velocity * damping
+		grabbed_object.apply_central_force(spring_force + damping_force)
+		
+		if Input.is_action_pressed("rotate_right"):
+			grabbed_object.rotate_y(delta * 2.0)  # Sentido antihorario
+
+		# Rotar horizontalmente con Q (en eje Y)
+		if Input.is_action_pressed("rotate_left"):
+			grabbed_object.rotate_y(-delta * 2.0)
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad si no está en el suelo
@@ -99,15 +105,23 @@ func _input(event: InputEvent) -> void:
 						if collided_object.is_in_group("Trash"):
 							grabbed_object = collided_object
 							grab_distance = raycast.global_transform.origin.distance_to(grabbed_object.global_transform.origin)
-							grabbed_object.gravity_scale = 0.0  # Desactivar gravedad temporalmente
-							grabbed_object.linear_velocity = Vector3.ZERO  # Detener el movimiento
+							grabbed_object.gravity_scale = 0.0 # Desactivar gravedad temporalmente
+							grabbed_object.linear_velocity = Vector3.ZERO # Detener el movimiento
 							grabbed_object.angular_velocity = Vector3.ZERO
+							grabbed_object.angular_damp = 100.0
+							
 				else:
 					# Soltar el objeto
 					if grabbed_object:
-						grabbed_object.gravity_scale = 1.0  # Reactivar gravedad
-						grabbed_object = null  # Dejar de agarrar el objeto
-		
+						grabbed_object.gravity_scale = 1.0 # Reactivar gravedad
+						grabbed_object.angular_damp = 1
+						grabbed_object = null # Dejar de agarrar el objeto
+	
+	if grabbed_object and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			grab_distance = clamp(grab_distance + 0.2, 1.0, 3.0)  # Acercar
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			grab_distance = clamp(grab_distance - 0.2, 1.0, 3.0)  # Alejar	
 	# INTERACTUAR CON PUERTA
 	if Input.is_action_just_pressed("interact"):
 		var interacted = interact_cast.get_collider()
