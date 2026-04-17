@@ -13,6 +13,7 @@ var rotation_x := 0.0
 @onready var audio = $AudioStreamPlayer3D
 @onready var audioI = $AudioInteractables
 @onready var hotbar = $UI/HotbarUI  
+@onready var bag_fill_bar = $UI/BagFillBar
 
 # VARIABLES PARA AGARRE DE OBJETOS
 var grabbed_object: RigidBody3D = null
@@ -37,6 +38,10 @@ var sonidos_pasos := [
 	preload("res://sounds/step3.wav"),
 	preload("res://sounds/step4.wav")
 ]
+
+#VARIABLES RECOGER BASURA
+const FULL_TRASH_BAG_SCENE = preload("res://src/scenes/trash.tscn")
+var current_bag: RigidBody3D = null
 
 signal broom_sweep
 
@@ -95,6 +100,7 @@ func _input(event: InputEvent) -> void:
 
 	# E → intentar recoger herramienta o interactuar
 	if Input.is_action_just_pressed("interact"):
+		# — Recoger herramientas del piso —
 		var hit = raycast.get_collider()
 		if hit:
 			if hit.is_in_group("brooms"):
@@ -103,7 +109,20 @@ func _input(event: InputEvent) -> void:
 			elif hit.is_in_group("mops"):
 				_pick_up_tool(hit, "mop")
 				return
-
+			elif hit.is_in_group("trash_bags"):
+				_pick_up_tool(hit, "trash_bag")
+				return
+			# — Recoger basura con la bolsa equipada —
+			elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
+				_collect_trash_with_bag(hit)
+				return
+		var interacted = interact_cast.get_collider()
+		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
+			interacted.action_use()
+	
+	if Input.is_action_just_pressed("drop"):
+		drop_current_tool()
+	
 		# Interactuables genéricos
 		var interacted = interact_cast.get_collider()
 		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
@@ -129,17 +148,22 @@ func _input(event: InputEvent) -> void:
 # ─── RECOGER / SOLTAR HERRAMIENTAS ────────────────────────────────────────────
 
 func _pick_up_tool(tool_node: RigidBody3D, type: String) -> void:
-	# Buscar slot libre en hotbar
+	if hotbar.has_item(tool_node):
+		return
+
 	var slot_index = hotbar.get_free_slot()
 	if slot_index == -1:
 		print("Hotbar llena")
 		return
 
-	# Guardar referencia y tipo en la hotbar
+	tool_node.freeze = true
+	tool_node.visible = false
+	tool_node.set_collision_layer_value(1, false)
+	tool_node.set_collision_mask_value(1, false)
+
 	hotbar.add_item_to_slot(slot_index, tool_node, type)
 
-	# Si el slot libre es el activo, equipar de inmediato
-	if slot_index == hotbar.selected_slot:
+	if slot_index == hotbar.selected_slot and not equipped_item:
 		_attach_to_hand(tool_node, type)
 
 # Llamado por la hotbar al cambiar de slot
@@ -163,31 +187,59 @@ func _attach_to_hand(tool_node: RigidBody3D, type: String) -> void:
 	tool_node.reparent(hand_position)
 	tool_node.transform = Transform3D.IDENTITY
 	tool_node.visible = true
+	
+	if type == "trash_bag":
+		bag_fill_bar.show_bar()
+		bag_fill_bar.update_fill(tool_node.get_fill_ratio())
+	else:
+		bag_fill_bar.hide_bar()
 
 func _detach_from_hand() -> void:
 	if not equipped_item:
 		return
-	# Lo dejamos oculto pero en la escena, para que siga en hotbar
+	bag_fill_bar.hide_bar()
 	equipped_item.visible = false
-	# Lo sacamos de hand_position y lo ponemos en la raíz para no perderlo
 	equipped_item.reparent(get_tree().current_scene)
 	equipped_item.freeze = true
 	equipped_item = null
 	equipped_type = ""
 
+# ─── DROP HERRAMIENTA ─────────────────────────────────────────────────────────
+
 func drop_current_tool() -> void:
 	if not equipped_item:
+		# Incluso si no hay ítem equipado visualmente, limpiar el slot
+		hotbar.remove_item_from_slot(hotbar.selected_slot)
 		return
+
 	var item = equipped_item
 	var slot = hotbar.selected_slot
+	
+	if equipped_type == "trash_bag":
+		bag_fill_bar.hide_bar()
+	
+	# Limpiar referencias ANTES de reparent para evitar errores
 	equipped_item = null
 	equipped_type = ""
 
+	# Sacar el ítem de la mano y devolverlo al mundo
 	item.reparent(get_tree().current_scene)
+	
+	
+	# Tirarlo un poco hacia adelante para que no quede dentro del jugador
+	var drop_offset = -cam.global_transform.basis.z * 1.2 + Vector3(0, 0.3, 0)
+	item.global_transform.origin = cam.global_transform.origin + drop_offset
+
+	# Restaurar física
 	item.freeze = false
+	item.visible = true
 	item.set_collision_layer_value(1, true)
 	item.set_collision_mask_value(1, true)
-	item.visible = true
+
+	# Impulso leve hacia adelante
+	item.apply_central_impulse(-cam.global_transform.basis.z * 2.0)
+
+	# Limpiar slot en hotbar
 	hotbar.remove_item_from_slot(slot)
 
 # ─── USO DE HERRAMIENTAS ───────────────────────────────────────────────────────
@@ -303,3 +355,39 @@ func movement(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+
+# ─── BOLSA DE BASURA ──────────────────────────────────────────────────────────
+
+func _collect_trash_with_bag(trash_node: Node) -> void:
+	if not equipped_item or equipped_type != "trash_bag":
+		return
+	if not equipped_item.can_collect():
+		return
+
+	# Conectar señal bag_full si no está conectada aún
+	if not equipped_item.bag_full.is_connected(_on_bag_full):
+		equipped_item.bag_full.connect(_on_bag_full)
+
+	trash_node.collect()
+	equipped_item.collect_item()
+
+	if equipped_item:
+		bag_fill_bar.update_fill(equipped_item.get_fill_ratio())
+
+func _on_bag_full(bag_node: RigidBody3D) -> void:
+	bag_fill_bar.hide_bar()
+
+	var slot = hotbar.selected_slot
+
+	# Limpiar ANTES de tocar el nodo
+	equipped_item = null
+	equipped_type = ""
+	hotbar.remove_item_from_slot(slot)
+
+	# Spawnear bolsa llena
+	var full_bag = FULL_TRASH_BAG_SCENE.instantiate()
+	get_tree().current_scene.add_child(full_bag)
+	full_bag.global_transform.origin = global_transform.origin + (-transform.basis.z * 1.0) + Vector3(0, 0.3, 0)
+
+	# Destruir la bolsa vacía AL FINAL
+	bag_node.queue_free()

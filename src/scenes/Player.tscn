@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dae78dvv8hlq5"]
+[gd_scene load_steps=7 format=3 uid="uid://dae78dvv8hlq5"]
 
 [ext_resource type="Script" uid="uid://cs0j6kdrjcpva" path="res://src/scripts/player.gd" id="1_0wdt2"]
 [ext_resource type="Script" uid="uid://b3lyrm78sfhub" path="res://src/scripts/crosshair.gd" id="2_v14g5"]
 [ext_resource type="PackedScene" uid="uid://b80xmegrbyw02" path="res://src/scenes/hotbar_ui.tscn" id="3_7x01q"]
+[ext_resource type="Script" uid="uid://ksycied7i0mk" path="res://src/scripts/bag_fill_bar.gd" id="4_qfal1"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7sgbr"]
 
@@ -56,6 +57,25 @@ grow_vertical = 2
 script = ExtResource("2_v14g5")
 
 [node name="HotbarUI" parent="UI" instance=ExtResource("3_7x01q")]
+
+[node name="BagFillBar" type="ProgressBar" parent="UI"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 390.0
+offset_top = -85.9999
+offset_right = 490.0
+offset_bottom = -58.9999
+grow_horizontal = 2
+grow_vertical = 0
+rotation = -1.5708
+scale = Vector2(1.02838, 1.02805)
+show_percentage = false
+script = ExtResource("4_qfal1")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 volume_db = -49.055

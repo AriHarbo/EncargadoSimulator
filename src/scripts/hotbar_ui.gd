@@ -81,3 +81,9 @@ func refresh_slots() -> void:
 			if icon: icon.visible = false
 		else:
 			if icon: icon.visible = false
+
+func has_item(tool_node: RigidBody3D) -> bool:
+	for entry in hotbar_items:
+		if entry != null and entry["node"] == tool_node:
+			return true
+	return false

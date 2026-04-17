@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://df0m7nve7e350"]
+[gd_scene load_steps=8 format=3 uid="uid://df0m7nve7e350"]
 
 [ext_resource type="Script" uid="uid://dgybi2ja048sf" path="res://src/scripts/blood_stain.gd" id="1_n88dh"]
 
@@ -11,6 +11,22 @@ size = Vector2(0.6, 0.6)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2kbx"]
 transparency = 1
 albedo_color = Color(0.545098, 0, 0, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_n88dh"]
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.5
+gravity = Vector3(0, -4, 0)
+scale_min = 0.05
+scale_max = 0.15
+color = Color(0.784314, 0.658824, 0.509804, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f6qwf"]
+albedo_color = Color(0.831373, 0.121569, 0.176471, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_3exej"]
+material = SubResource("StandardMaterial3D_f6qwf")
 
 [node name="BloodStain" type="StaticBody3D"]
 
@@ -25,3 +41,13 @@ shape = SubResource("BoxShape3D_g2kbx")
 mesh = SubResource("PlaneMesh_g2kbx")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_g2kbx")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Area3D"]
+emitting = false
+amount = 30
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-1, 0, -1, 2, 2, 2)
+process_material = SubResource("ParticleProcessMaterial_n88dh")
+draw_pass_1 = SubResource("SphereMesh_3exej")

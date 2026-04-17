@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckujil6i1dsa3"]
+
+[ext_resource type="Script" uid="uid://nkgqmtayvyu3" path="res://src/scripts/trash_area.gd" id="1_gbkyy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mlmem"]
+
+[node name="TrashArea" type="Area3D"]
+script = ExtResource("1_gbkyy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_mlmem")
