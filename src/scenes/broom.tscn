@@ -70,23 +70,34 @@ size = Vector3(0.0802002, 1.64856, 0.059082)
 
 [sub_resource type="Animation" id="Animation_m2pbu"]
 length = 0.001
-tracks/0/type = "rotation_3d"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_kcay2"]
 resource_name = "cleaning_animation"
-tracks/0/type = "rotation_3d"
+length = 0.5
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.333333, 1, 0, 0, 0.290176, 0.956973, 0.666667, 1, 0, 0, -0.284392, 0.958708, 1, 1, 0, 0, 0, 1)
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.233333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.2, 0), Vector3(0, 0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sgaj5"]
 _data = {
@@ -95,7 +106,6 @@ _data = {
 }
 
 [node name="Broom" type="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04639, 0)
 script = ExtResource("1_kcay2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://df0m7nve7e350"]
+
+[ext_resource type="Script" uid="uid://dgybi2ja048sf" path="res://src/scripts/blood_stain.gd" id="1_n88dh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g2kbx"]
+size = Vector3(0.6, 0.05, 0.6)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g2kbx"]
+size = Vector2(0.6, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2kbx"]
+transparency = 1
+albedo_color = Color(0.545098, 0, 0, 1)
+
+[node name="BloodStain" type="StaticBody3D"]
+
+[node name="Area3D" type="Area3D" parent="." groups=["BloodStain"]]
+collision_layer = 2
+script = ExtResource("1_n88dh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_g2kbx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+mesh = SubResource("PlaneMesh_g2kbx")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_g2kbx")

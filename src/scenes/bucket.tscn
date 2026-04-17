@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbh376h7jfa2y"]
+
+[ext_resource type="Script" uid="uid://cr6028kr7yyqx" path="res://src/scripts/area_3d_bucket.gd" id="1_lq3ir"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lq3ir"]
+height = 0.4
+radius = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mivn4"]
+top_radius = 0.3
+bottom_radius = 0.25
+height = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mivn4"]
+albedo_color = Color(0.843608, 0.300423, 0.364991, 1)
+
+[node name="Bucket" type="Node3D"]
+
+[node name="Area3D" type="Area3D" parent="." groups=["Interactable"]]
+collision_layer = 2
+script = ExtResource("1_lq3ir")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_lq3ir")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_mivn4")
+surface_material_override/0 = SubResource("StandardMaterial3D_mivn4")
