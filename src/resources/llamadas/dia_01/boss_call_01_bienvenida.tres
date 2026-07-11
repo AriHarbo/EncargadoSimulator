@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://g2asjebu0mjc"]
+
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_s7cod"]
+
+[resource]
+script = ExtResource("1_s7cod")
+id = "bienvenida"
+tipo_activacion = 0
+hora_activacion = 8.0
+tarea_activadora = ""
+lineas = Array[String](["Bienvenido.", "Soy el dueño del establecimiento.", "Por que no empiezas presentandote a tus compañeros?", "La recepcionista y el bartender te estan esperando."])
+tareas_a_agregar = Array[String](["presentaciones"])
+metadata/_custom_type_script = "uid://dr75lfpgikn3s"

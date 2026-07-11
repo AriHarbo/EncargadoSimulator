@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://ewv8axfchccm"]
+
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_1c0fg"]
+
+[resource]
+script = ExtResource("1_1c0fg")
+id = "limpiar_habitaciones"
+tipo_activacion = 1
+hora_activacion = 0.0
+tarea_activadora = "arreglar_cuarto"
+lineas = Array[String](["Las habitaciones 1 y 2 necesitan estar listas.", "Tenemos huespedes esta noche.", "Que esten impecables."])
+tareas_a_agregar = Array[String](["limpiar_hab1", "limpiar_hab2"])
+metadata/_custom_type_script = "uid://dr75lfpgikn3s"

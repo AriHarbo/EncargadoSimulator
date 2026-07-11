@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://cnmpdlr5f4efp"]
+
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_kqye4"]
+
+[resource]
+script = ExtResource("1_kqye4")
+id = "cuarto_conserje"
+tipo_activacion = 1
+hora_activacion = 0.0
+tarea_activadora = "presentaciones"
+lineas = Array[String](["Bien.", "Tu cuarto esta en el pasillo lateral.", "Acomodate. Vas a pasar mucho tiempo ahi."])
+tareas_a_agregar = Array[String](["arreglar_cuarto"])
+metadata/_custom_type_script = "uid://dr75lfpgikn3s"

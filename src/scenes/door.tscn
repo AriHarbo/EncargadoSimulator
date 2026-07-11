@@ -6,9 +6,10 @@
 albedo_color = Color(0.402735, 0.222461, 9.62615e-08, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_4yji4"]
+size = Vector3(1, 2, 0.1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_80g33"]
-size = Vector3(1, 0.613251, 0.001)
+size = Vector3(1.09875, 1.07323, 1.13624)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nxxn5"]
 size = Vector3(1.06689, 1.00415, 7.62427)
@@ -48,7 +49,7 @@ script = ExtResource("1_nxxn5")
 [node name="door" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="door"]
-transform = Transform3D(1, 0, 0, 0, 2.04355, 0, 0, 0, 0.127847, 0.5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
 material_override = SubResource("StandardMaterial3D_nxxn5")
 mesh = SubResource("BoxMesh_4yji4")
 skeleton = NodePath("../..")
@@ -56,7 +57,7 @@ skeleton = NodePath("../..")
 [node name="StaticBody3D" type="StaticBody3D" parent="door/MeshInstance3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="door/MeshInstance3D/StaticBody3D"]
-transform = Transform3D(0.9, 0, 0, 0, 1.84, 0, 0, 0, 0.115, 0, 0.103292, 0.0574425)
+transform = Transform3D(0.9, 0, 0, 0, 1.84, 0, 0, 0, 0.115, -0.00170287, 0.00716615, -0.00783393)
 shape = SubResource("BoxShape3D_80g33")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

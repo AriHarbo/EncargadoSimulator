@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Task" load_steps=2 format=3 uid="uid://d0qwvyohelyj2"]
+
+[ext_resource type="Script" uid="uid://c3imi45og6cs5" path="res://src/scripts/task.gd" id="1_3662j"]
+
+[resource]
+script = ExtResource("1_3662j")
+id = "presentaciones"
+nombre = "Conocer al equipo"
+descripcion = "Presentate con la recepcionista y el bartender."
+tipo = 0
+tiene_limite = false
+hora_limite = 0.0
+hora_activacion = 0.0
+dinero = 0
+metadata/_custom_type_script = "uid://c3imi45og6cs5"

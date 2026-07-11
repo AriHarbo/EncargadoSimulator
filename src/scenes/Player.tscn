@@ -6,9 +6,11 @@
 [ext_resource type="Script" uid="uid://ksycied7i0mk" path="res://src/scripts/bag_fill_bar.gd" id="4_qfal1"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7sgbr"]
+height = 1.8
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0wdt2"]
 radius = 0.356359
+height = 1.62139
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_0wdt2")
@@ -17,6 +19,7 @@ script = ExtResource("1_0wdt2")
 mesh = SubResource("CapsuleMesh_7sgbr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00424361, 0.083166, 0.00194728)
 shape = SubResource("CapsuleShape3D_0wdt2")
 
 [node name="Camera3D" type="Camera3D" parent="."]

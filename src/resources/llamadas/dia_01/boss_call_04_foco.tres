@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://clunfij3fqnj5"]
+
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_wsky5"]
+
+[resource]
+script = ExtResource("1_wsky5")
+id = "foco_pasillo"
+tipo_activacion = 0
+hora_activacion = 13.0
+tarea_activadora = ""
+lineas = Array[String](["El foco del pasillo se quemo.", "Hay repuestos en el deposito.", "Arreglalo antes de que anochezca."])
+tareas_a_agregar = Array[String](["cambiar_foco"])
+metadata/_custom_type_script = "uid://dr75lfpgikn3s"

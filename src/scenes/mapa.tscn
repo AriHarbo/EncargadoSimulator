@@ -1,35 +1,15 @@
-[gd_scene load_steps=23 format=3 uid="uid://d15olcwlgxrr5"]
+[gd_scene load_steps=16 format=3 uid="uid://d15olcwlgxrr5"]
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
-[ext_resource type="PackedScene" uid="uid://bt02n2pltoch5" path="res://src/scenes/Elevator.tscn" id="3_a214w"]
+[ext_resource type="PackedScene" uid="uid://crnaf7io0rxdo" path="res://src/scenes/door.tscn" id="2_c8ril"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/dumpster.tscn" id="4_1sayj"]
-[ext_resource type="PackedScene" uid="uid://crnaf7io0rxdo" path="res://src/scenes/door.tscn" id="5_t4667"]
 [ext_resource type="PackedScene" uid="uid://dip35k3r165k6" path="res://src/scenes/broom.tscn" id="6_a214w"]
 [ext_resource type="Script" uid="uid://c7jmx7nqlr24b" path="res://src/scripts/dirty_area.gd" id="7_up4k5"]
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/mop.tscn" id="8_oi740"]
 [ext_resource type="PackedScene" uid="uid://cbh376h7jfa2y" path="res://src/scenes/bucket.tscn" id="9_ii78r"]
 [ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/trash_bag.tscn" id="10_vfd3t"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_5oi1x"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ii78r"]
-albedo_color = Color(0.366018, 0.175298, 0.00480961, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_rdlyd"]
-size = Vector3(1.00269, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_a214w"]
-size = Vector3(1, 5, 25)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c8ril"]
-albedo_color = Color(0.999999, 0.995106, 0.697026, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_up4k5"]
-size = Vector3(1, 5, 25)
-
-[sub_resource type="BoxMesh" id="BoxMesh_up4k5"]
-size = Vector3(2, 3, 1)
+[ext_resource type="PackedScene" uid="uid://bmamutli16np2" path="res://src/scenes/dialogo_ui.tscn" id="11_vfd3t"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rdlyd"]
 
@@ -50,100 +30,184 @@ size = Vector3(22.7732, 5, 9.9624)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0940455, 0.105144, 0.17166)
 script = ExtResource("1_csrmo")
 
-[node name="building" type="Node3D" parent="."]
+[node name="Building" type="Node3D" parent="."]
 
-[node name="Floor" type="MeshInstance3D" parent="building"]
-transform = Transform3D(31.0965, 0, 0, 0, 1.00281, 0, 0, 0, 22.8987, 0.762654, 0.192965, -0.162717)
-mesh = SubResource("BoxMesh_5oi1x")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_ii78r")
+[node name="Piso_Lobby" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(20, 0.2, 20)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Floor"]
+[node name="Pared_Norte" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -10)
+use_collision = true
+size = Vector3(20, 3, 0.2)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Floor/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 0.999993, 0, 0, 0, 0.999993, -0.00134278, 0, 0)
-shape = SubResource("BoxShape3D_rdlyd")
+[node name="Pared_Sur" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
+use_collision = true
+size = Vector3(20, 3, 0.2)
 
-[node name="Wall" type="MeshInstance3D" parent="building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.61565, 3.16661, 0.317534)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pared_Este_Top" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 0)
+use_collision = true
+size = Vector3(0.2, 1, 20)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall"]
+[node name="Pared_Este_Der" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 5.75)
+use_collision = true
+size = Vector3(0.2, 3, 8.5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Pared_Este_Izq" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0098, 1.52184, -5.73698)
+use_collision = true
+size = Vector3(0.2, 3, 8.5)
 
-[node name="Wall2" type="MeshInstance3D" parent="building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2244, 3.16661, 0.317534)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pared_Oeste" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
+use_collision = true
+size = Vector3(0.2, 3, 20)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall2"]
+[node name="Techo_lobby" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+visible = false
+use_collision = true
+size = Vector3(20, 0.2, 20)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall2/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Cuarto_conserje" type="Node3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
 
-[node name="Wall3" type="MeshInstance3D" parent="building"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64987, 3.167, 11.5802)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Piso_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.1, -3.5)
+use_collision = true
+size = Vector3(4, 0.2, 5)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall3"]
+[node name="Techo_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3.5)
+use_collision = true
+size = Vector3(4, 0.2, 5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall3/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Pared_Norte_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -6)
+use_collision = true
+size = Vector3(4, 3, 0.2)
 
-[node name="Wall6" type="MeshInstance3D" parent="building"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.9758, 3.167, 0.527115)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pared_Este_Top" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -3.5)
+use_collision = true
+size = Vector3(0.2, 1, 5)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall6"]
+[node name="Pared_Este_Izq" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -5.25)
+use_collision = true
+size = Vector3(0.2, 3, 1.5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall6/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Pared_Este_Der" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -1.75)
+use_collision = true
+size = Vector3(0.2, 3, 1.5)
 
-[node name="Wall7" type="MeshInstance3D" parent="building"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 4.02924, 3.167, 0.527114)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pasillo" type="Node3D" parent="Building"]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall7"]
+[node name="Piso_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.1, 0)
+use_collision = true
+size = Vector3(12, 0.2, 3)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall7/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Techo_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3, 0)
+use_collision = true
+size = Vector3(12, 0.2, 3)
 
-[node name="Wall4" type="MeshInstance3D" parent="building"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -9.18853, 3.167, -11.7672)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pared_Sur_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, 1.5)
+use_collision = true
+size = Vector3(12, 3, 0.2)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall4"]
+[node name="Pared_Este_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 0)
+use_collision = true
+size = Vector3(0.2, 3, 3)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall4/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Habitacion_1" type="Node3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 
-[node name="Wall5" type="MeshInstance3D" parent="building"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 17.7988, 3.167, -11.7672)
-mesh = SubResource("BoxMesh_a214w")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Piso_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/Wall5"]
+[node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/Wall5/StaticBody3D"]
-shape = SubResource("BoxShape3D_up4k5")
+[node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
+use_collision = true
+size = Vector3(6, 3, 0.2)
 
-[node name="Elevator" parent="building" instance=ExtResource("3_a214w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.29975, 0.639537, -13.1701)
+[node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
+use_collision = true
+size = Vector3(0.2, 3, 8)
 
-[node name="interact_door" parent="building" instance=ExtResource("5_t4667")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4617, 1.71614, 0.115107)
+[node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
+use_collision = true
+size = Vector3(6, 1, 0.2)
 
-[node name="Wall8" type="MeshInstance3D" parent="building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.95667, 4.156, 0.527)
-mesh = SubResource("BoxMesh_up4k5")
-surface_material_override/0 = SubResource("StandardMaterial3D_c8ril")
+[node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
+use_collision = true
+size = Vector3(2.01709, 3, 0.2)
+
+[node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
+use_collision = true
+size = Vector3(3.5204, 3, 0.2)
+
+[node name="interact_door" parent="Building/Habitacion_1" instance=ExtResource("2_c8ril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
+
+[node name="Habitacion_2" type="Node3D" parent="Building"]
+
+[node name="Piso_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+
+[node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+
+[node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
+use_collision = true
+size = Vector3(6, 3, 0.2)
+
+[node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+
+[node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
+use_collision = true
+size = Vector3(6, 1, 0.2)
+
+[node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
+use_collision = true
+size = Vector3(2.01709, 3, 0.2)
+
+[node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
+use_collision = true
+size = Vector3(3.5204, 3, 0.2)
+
+[node name="interact_door" parent="Building/Habitacion_2" instance=ExtResource("2_c8ril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_csrmo")
@@ -152,14 +216,13 @@ environment = SubResource("Environment_csrmo")
 transform = Transform3D(1, 0, 0, 0, -0.150157, 0.988662, 0, -0.988662, -0.150157, 0, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("1_rdlyd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.42664, 1.70213, -10.686)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.42664, 1.70213, -6.67359)
 
 [node name="dumpster" parent="." instance=ExtResource("4_1sayj")]
-transform = Transform3D(1.1107, 0, -0.114584, 0, 1, 0, 0.104992, 0, 1.21217, 7.18109, 0.72815, -4.52253)
-
-[node name="Broom" parent="." instance=ExtResource("6_a214w")]
+transform = Transform3D(1.1107, 0, -0.114584, 0, 1, 0, 0.104992, 0, 1.21217, 7.18109, 0.0349569, -4.52253)
 
 [node name="DirtyArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.6192, 0, 0)
 script = ExtResource("7_up4k5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DirtyArea"]
@@ -172,8 +235,12 @@ shape = SubResource("BoxShape3D_oi740")
 
 [node name="Mop" parent="." instance=ExtResource("8_oi740")]
 
+[node name="Broom" parent="." instance=ExtResource("6_a214w")]
+
 [node name="Bucket" parent="." instance=ExtResource("9_ii78r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.71171, 0.894366, -1.44824)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.71171, 0.233759, -1.44824)
 
 [node name="TrashBag" parent="." instance=ExtResource("10_vfd3t")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.13407, 0.944366, -0.427204)
+
+[node name="DialogoUI" parent="." instance=ExtResource("11_vfd3t")]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Task" load_steps=2 format=3 uid="uid://jogvm3kn3lvg"]
+
+[ext_resource type="Script" uid="uid://c3imi45og6cs5" path="res://src/scripts/task.gd" id="1_70g81"]
+
+[resource]
+script = ExtResource("1_70g81")
+id = "limpiar_hab2"
+nombre = "Limpiar habitacion 2"
+descripcion = "Limpia las manchas, recoge la basura y prepara la cama."
+tipo = 0
+tiene_limite = false
+hora_limite = 0.0
+hora_activacion = 0.0
+dinero = 50
+metadata/_custom_type_script = "uid://c3imi45og6cs5"

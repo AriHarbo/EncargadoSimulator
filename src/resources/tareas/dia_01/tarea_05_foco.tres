@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Task" load_steps=2 format=3 uid="uid://bo2cwrxnjlisy"]
+
+[ext_resource type="Script" uid="uid://c3imi45og6cs5" path="res://src/scripts/task.gd" id="1_is82d"]
+
+[resource]
+script = ExtResource("1_is82d")
+id = "cambiar_foco"
+nombre = "Cambiar el foco del pasillo"
+descripcion = "El foco del pasillo se quemo. Busca uno nuevo en el deposito."
+tipo = 0
+tiene_limite = false
+hora_limite = 0.0
+hora_activacion = 13.0
+dinero = 20
+metadata/_custom_type_script = "uid://c3imi45og6cs5"

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Task" load_steps=2 format=3 uid="uid://d3krljkefx4yn"]
+
+[ext_resource type="Script" uid="uid://c3imi45og6cs5" path="res://src/scripts/task.gd" id="1_e6v48"]
+
+[resource]
+script = ExtResource("1_e6v48")
+id = "limpiar_cadaver"
+nombre = "???"
+descripcion = "El Don necesita un favor."
+tipo = 1
+tiene_limite = true
+hora_limite = 30.0
+hora_activacion = 22.0
+dinero = 500
+metadata/_custom_type_script = "uid://c3imi45og6cs5"

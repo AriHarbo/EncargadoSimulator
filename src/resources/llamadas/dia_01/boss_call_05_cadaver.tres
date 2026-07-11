@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://b8ml71t3d640t"]
+
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_q0j0u"]
+
+[resource]
+script = ExtResource("1_q0j0u")
+id = "el_favor"
+tipo_activacion = 0
+hora_activacion = 22.0
+tarea_activadora = ""
+lineas = Array[String](["Hay un inconveniente en la habitacion 2.", "Necesito que lo resuelvas antes de las 6.", "Discrecion, porfavor."])
+tareas_a_agregar = Array[String](["limpiar_cadaver"])
+metadata/_custom_type_script = "uid://dr75lfpgikn3s"
