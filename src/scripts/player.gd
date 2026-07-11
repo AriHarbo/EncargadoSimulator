@@ -50,9 +50,6 @@ func _ready() -> void:
 	base_camera_y = cam.position.y
 	add_to_group("player")
 
-func _process(delta: float) -> void:
-	_handle_grabbed_object(delta)
-
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -61,6 +58,7 @@ func _physics_process(delta: float) -> void:
 	movement(delta)
 	move_and_slide()
 	_update_walk_bob(delta)
+	_handle_grabbed_object(delta)
 
 # ─── GRAB ──────────────────────────────────────────────────────────────────────
 
