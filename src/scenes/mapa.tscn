@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://d15olcwlgxrr5"]
+[gd_scene load_steps=17 format=3 uid="uid://d15olcwlgxrr5"]
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/mop.tscn" id="8_oi740"]
 [ext_resource type="PackedScene" uid="uid://cbh376h7jfa2y" path="res://src/scenes/bucket.tscn" id="9_ii78r"]
 [ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/trash_bag.tscn" id="10_vfd3t"]
+[ext_resource type="PackedScene" uid="uid://bm37wbyvd2umg" path="res://src/scenes/trash.tscn" id="11_608hb"]
 [ext_resource type="PackedScene" uid="uid://bmamutli16np2" path="res://src/scenes/dialogo_ui.tscn" id="11_vfd3t"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rdlyd"]
@@ -244,3 +245,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.71171, 0.233759, -1.44824)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.13407, 0.944366, -0.427204)
 
 [node name="DialogoUI" parent="." instance=ExtResource("11_vfd3t")]
+
+[node name="Trash" parent="." instance=ExtResource("11_608hb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.74888, 0.885816, 2.15355)
