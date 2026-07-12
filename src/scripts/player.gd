@@ -103,28 +103,41 @@ func _input(event: InputEvent) -> void:
 		if hit:
 			if hit.is_in_group("brooms"):
 				_pick_up_tool(hit, "broom")
+				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("mops"):
 				_pick_up_tool(hit, "mop")
+				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("trash_bags"):
 				_pick_up_tool(hit, "trash_bag")
+				get_viewport().set_input_as_handled()
 				return
 			# — Recoger basura con la bolsa equipada —
 			elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
 				_collect_trash_with_bag(hit)
+				get_viewport().set_input_as_handled()
 				return
 		var interacted = interact_cast.get_collider()
-		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
-			interacted.action_use()
+		if interacted and interacted.is_in_group("Interactable"):
+			var target = interacted
+			if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
+				target = target.get_parent()
+			if target.has_method("action_use"):
+				target.action_use()
+				get_viewport().set_input_as_handled()
 	
 	if Input.is_action_just_pressed("drop"):
 		drop_current_tool()
 	
 		# Interactuables genéricos
 		var interacted = interact_cast.get_collider()
-		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
-			interacted.action_use()
+		if interacted and interacted.is_in_group("Interactable"):
+			var target = interacted
+			if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
+				target = target.get_parent()
+			if target.has_method("action_use"):
+				target.action_use()
 
 	# Click izquierdo → usar herramienta o agarrar basura
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:

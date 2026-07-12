@@ -9,20 +9,21 @@ var _abierto: bool = false
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	print("panel: ", panel)
 	print("lista_tareas: ", lista_tareas)
 	print("hint_cerrar: ", hint_cerrar)
 	panel.hide()
-
 	# Escuchar cuando el Jefe asigna tareas nuevas para actualizar el papel
 	GameManager.tarea_activada.connect(_on_tarea_activada)
 	GameManager.tarea_completada.connect(_on_tarea_completada)
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if not _abierto:
 		return
-	if event.is_action_just_pressed("interact") or event.is_action_just_pressed("ui_cancel"):
+	if event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
 		cerrar()
 
 

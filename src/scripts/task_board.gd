@@ -5,7 +5,5 @@ extends Node3D
 
 
 func action_use() -> void:
-	print("se uso el taskboard1")
 	if task_board_ui:
-		print("se uso el taskboard")
 		task_board_ui.abrir()
