@@ -7,20 +7,34 @@ process_mode = 3
 script = ExtResource("1_2u4t6")
 panel = NodePath("Panel")
 lista_tareas = NodePath("Panel/VBoxContainer/ListaTareas")
-hint_cerrar = NodePath("Panel/VBoxContainer/Label2")
+hint_cerrar = NodePath("Panel/Label2")
 
 [node name="Panel" type="Panel" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+custom_minimum_size = Vector2(400, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
 text = "TAREAS"
+horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -28,6 +42,11 @@ layout_mode = 2
 [node name="ListaTareas" type="VBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Panel/VBoxContainer"]
+[node name="Label2" type="Label" parent="Panel"]
 layout_mode = 2
+offset_left = -3.0
+offset_top = 474.0
+offset_right = 397.0
+offset_bottom = 497.0
 text = "[E] Cerrar"
+horizontal_alignment = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://d15olcwlgxrr5"]
+[gd_scene load_steps=33 format=3 uid="uid://d15olcwlgxrr5"]
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
@@ -12,10 +12,23 @@
 [ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/trash_bag.tscn" id="10_vfd3t"]
 [ext_resource type="PackedScene" uid="uid://bmamutli16np2" path="res://src/scenes/dialogo_ui.tscn" id="11_vfd3t"]
 [ext_resource type="PackedScene" uid="uid://k3jtsesbh2e0" path="res://src/scenes/task_board_ui.tscn" id="12_608hb"]
+[ext_resource type="PackedScene" uid="uid://ddvxrmpmuh6su" path="res://src/scenes/incoming_call.tscn" id="13_aus5l"]
 [ext_resource type="PackedScene" uid="uid://bm37wbyvd2umg" path="res://src/scenes/trash.tscn" id="13_cu83j"]
 [ext_resource type="PackedScene" uid="uid://df0m7nve7e350" path="res://src/scenes/blood_stain.tscn" id="14_ohegu"]
 [ext_resource type="PackedScene" uid="uid://rjj1junjy0u8" path="res://src/scenes/dirtiness.tscn" id="15_aus5l"]
 [ext_resource type="PackedScene" uid="uid://ucn50j0d1ct" path="res://src/scenes/trash_item.tscn" id="16_codxj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohegu"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmq3s"]
+albedo_color = Color(0.419608, 0.117647, 0.137255, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3mu0"]
+albedo_color = Color(0.239216, 0.168627, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aus5l"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cu83j"]
 albedo_color = Color(0.776742, 0.889815, 0.951015, 1)
@@ -26,6 +39,15 @@ size = Vector2(0.4, 0.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_608hb"]
 size = Vector3(0.4, 0.6, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_codxj"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k0oyl"]
+albedo_color = Color(0.996078, 0.945098, 0.941176, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1hk0g"]
+albedo_color = Color(0.419608, 0.117647, 0.137255, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rdlyd"]
 
@@ -52,42 +74,49 @@ script = ExtResource("1_csrmo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 use_collision = true
 size = Vector3(20, 0.2, 20)
+material = SubResource("StandardMaterial3D_ohegu")
 
 [node name="Pared_Norte" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -10)
 use_collision = true
 size = Vector3(20, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Sur" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 use_collision = true
 size = Vector3(20, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Top" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 0)
 use_collision = true
 size = Vector3(0.2, 1, 20)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Der" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 5.75)
 use_collision = true
 size = Vector3(0.2, 3, 8.5)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Izq" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0098, 1.52184, -5.73698)
 use_collision = true
 size = Vector3(0.2, 3, 8.5)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Oeste" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
 use_collision = true
 size = Vector3(0.2, 3, 20)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Techo_lobby" type="CSGBox3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-visible = false
 use_collision = true
 size = Vector3(20, 0.2, 20)
+material = SubResource("StandardMaterial3D_r3mu0")
 
 [node name="Cuarto_conserje" type="Node3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
@@ -96,31 +125,37 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.1, -3.5)
 use_collision = true
 size = Vector3(4, 0.2, 5)
+material = SubResource("StandardMaterial3D_aus5l")
 
 [node name="Techo_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3.5)
 use_collision = true
 size = Vector3(4, 0.2, 5)
+material = SubResource("StandardMaterial3D_r3mu0")
 
 [node name="Pared_Norte_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -6)
 use_collision = true
 size = Vector3(4, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Top" type="CSGBox3D" parent="Building/Cuarto_conserje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -3.5)
 use_collision = true
 size = Vector3(0.2, 1, 5)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Izq" type="CSGBox3D" parent="Building/Cuarto_conserje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -5.25)
 use_collision = true
 size = Vector3(0.2, 3, 1.5)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Der" type="CSGBox3D" parent="Building/Cuarto_conserje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -1.75)
 use_collision = true
 size = Vector3(0.2, 3, 1.5)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="TaskBoard" type="Node3D" parent="Building/Cuarto_conserje" node_paths=PackedStringArray("task_board_ui") groups=["Interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.13713, 1.40682, -5.9506)
@@ -128,7 +163,7 @@ script = ExtResource("2_vfd3t")
 task_board_ui = NodePath("../../../TaskBoardUI")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Building/Cuarto_conserje/TaskBoard"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -2.45633e-09, 0.0561943)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -3.14908, -2.45633e-09, 0.0561943)
 mesh = SubResource("PlaneMesh_vfd3t")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Building/Cuarto_conserje/TaskBoard" groups=["Interactable"]]
@@ -144,21 +179,25 @@ shape = SubResource("BoxShape3D_608hb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.1, 0)
 use_collision = true
 size = Vector3(12, 0.2, 3)
+material = SubResource("StandardMaterial3D_codxj")
 
 [node name="Techo_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3, 0)
 use_collision = true
 size = Vector3(12, 0.2, 3)
+material = SubResource("StandardMaterial3D_r3mu0")
 
 [node name="Pared_Sur_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, 1.5)
 use_collision = true
 size = Vector3(12, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Pared_Este_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 0)
 use_collision = true
 size = Vector3(0.2, 3, 3)
+material = SubResource("StandardMaterial3D_wmq3s")
 
 [node name="Habitacion_1" type="Node3D" parent="Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
@@ -167,36 +206,43 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
 use_collision = true
 size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_k0oyl")
 
 [node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
 use_collision = true
 size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_r3mu0")
 
 [node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
 use_collision = true
 size = Vector3(6, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
 use_collision = true
 size = Vector3(0.2, 3, 8)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
 use_collision = true
 size = Vector3(6, 1, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
 use_collision = true
 size = Vector3(2.01709, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
 use_collision = true
 size = Vector3(3.5204, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="interact_door" parent="Building/Habitacion_1" instance=ExtResource("2_c8ril")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
@@ -207,36 +253,43 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
 use_collision = true
 size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_k0oyl")
 
 [node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
 use_collision = true
 size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_r3mu0")
 
 [node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
 use_collision = true
 size = Vector3(6, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
 use_collision = true
 size = Vector3(0.2, 3, 8)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
 use_collision = true
 size = Vector3(6, 1, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
 use_collision = true
 size = Vector3(2.01709, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
 use_collision = true
 size = Vector3(3.5204, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
 
 [node name="interact_door" parent="Building/Habitacion_2" instance=ExtResource("2_c8ril")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
@@ -248,7 +301,7 @@ environment = SubResource("Environment_csrmo")
 transform = Transform3D(1, 0, 0, 0, -0.150157, 0.988662, 0, -0.988662, -0.150157, 0, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("1_rdlyd")]
-transform = Transform3D(-0.998276, 0, -0.0586965, 0, 1, 0, 0.0586965, 0, -0.998276, 4.42664, 0.849285, -7.14405)
+transform = Transform3D(-0.0235075, 0, -0.999724, 0, 1, 0, 0.999724, 0, -0.0235075, -8.20688, 0.998286, 7.60503)
 
 [node name="dumpster" parent="." instance=ExtResource("4_1sayj")]
 transform = Transform3D(1.1107, 0, -0.114584, 0, 1, 0, 0.104992, 0, 1.21217, 7.18109, 0.0349569, -4.52253)
@@ -266,20 +319,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.30077, 3.19271, 6.01518)
 shape = SubResource("BoxShape3D_oi740")
 
 [node name="Mop" parent="." instance=ExtResource("8_oi740")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.22071, 0.6, -1.53142)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.91659, 0.180644, 9.12579)
 
 [node name="Broom" parent="." groups=["brooms"] instance=ExtResource("6_a214w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89073, 0.66406, -3.17975)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.55169, 0.66406, 9.10771)
 
-[node name="Bucket" parent="." instance=ExtResource("9_ii78r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.71171, 0.233759, -1.44824)
+[node name="Bucket" parent="." groups=["bucket"] instance=ExtResource("9_ii78r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.92457, 0.233759, 9.25912)
 
 [node name="TrashBag" parent="." instance=ExtResource("10_vfd3t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.13407, 0.944366, -0.427204)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.48013, 0.384844, 9.4027)
 
 [node name="DialogoUI" parent="." instance=ExtResource("11_vfd3t")]
 
 [node name="TaskBoardUI" parent="." instance=ExtResource("12_608hb")]
+
+[node name="IncomingCall" parent="." instance=ExtResource("13_aus5l")]
 
 [node name="Trash" parent="." instance=ExtResource("13_cu83j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.64269, 0.471683, 2.94865)
@@ -292,6 +347,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4109, 0.0420286, -4.3556)
 
 [node name="TrashItem" parent="." instance=ExtResource("16_codxj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.94106, 0.5, -4.44151)
+trash_type = 1
 
 [node name="TrashItem2" parent="." instance=ExtResource("16_codxj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.57221, 0.5, -4.19243)

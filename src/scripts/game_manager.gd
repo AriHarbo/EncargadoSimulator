@@ -62,7 +62,6 @@ var dinero_ganado: int = 0
 func _ready() -> void:
 	_cargar_recursos()
 	await get_tree().process_frame
-	iniciar_dia()
 	print("Hora actual: ", hora_como_string())
 	print("Tareas cargadas en pool: ", _pool_tareas.size())
 	for id in _pool_tareas:
@@ -84,7 +83,6 @@ func _cargar_recursos() -> void:
 	llamadas_del_don = [
 		load("res://src/resources/llamadas/dia_01/boss_call_01_bienvenida.tres"),
 		load("res://src/resources/llamadas/dia_01/boss_call_02_cuarto.tres"),
-		load("res://src/resources/llamadas/dia_01/boss_call_03_habitaciones.tres"),
 		load("res://src/resources/llamadas/dia_01/boss_call_04_foco.tres"),
 		load("res://src/resources/llamadas/dia_01/boss_call_05_cadaver.tres"),
 	]

@@ -6,7 +6,7 @@ extends CanvasLayer
 
 # Escena de un item de tarea — la creamos por código así que no necesita escena separada
 var _abierto: bool = false
-
+var _primera_vez: bool = true
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -32,6 +32,10 @@ func _unhandled_input(event: InputEvent) -> void:
 # ---------------------------------------------------------------------------
 
 func abrir() -> void:
+	if _primera_vez:
+		_primera_vez = false
+		GameManager.asignar_tareas(["limpiar_hab1", "limpiar_hab2", "cambiar_foco"])
+	
 	_abierto = true
 	_refrescar_lista()
 	panel.show()
