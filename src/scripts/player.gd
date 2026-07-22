@@ -14,6 +14,7 @@ var rotation_x := 0.0
 @onready var audioI = $AudioInteractables
 @onready var hotbar = $UI/HotbarUI  
 @onready var bag_fill_bar = $UI/BagFillBar
+@onready var interact_hint = $UI/InteractHint
 
 # VARIABLES PARA AGARRE DE OBJETOS
 var grabbed_object: RigidBody3D = null
@@ -43,15 +44,24 @@ var sonidos_pasos := [
 const FULL_TRASH_BAG_SCENE = preload("res://src/scenes/trash.tscn")
 var current_bag: RigidBody3D = null
 
+# Para el bucket movible
+var bucket_in_hand: Node3D = null           # El bucket cuando está siendo cargado
+var bucket_preview: MeshInstance3D = null   # La preview transparente
+var placing_bucket: bool = false            # Si estamos en modo colocación
+var bucket_scene: PackedScene = null 
+
+# Distancia maxima para interactuar con el bucket
+const BUCKET_HOLD_TIME: float = 0.6        # Segundos que hay que mantener E
+var bucket_hold_timer: float = 0.0
+var holding_e_on_bucket: bool = false
+
 signal broom_sweep
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	base_camera_y = cam.position.y
 	add_to_group("player")
-
-func _process(delta: float) -> void:
-	_handle_grabbed_object(delta)
+	interact_hint.visible = false
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -61,6 +71,10 @@ func _physics_process(delta: float) -> void:
 	movement(delta)
 	move_and_slide()
 	_update_walk_bob(delta)
+	_handle_grabbed_object(delta)
+	_update_interact_hint()
+	_update_bucket_preview()
+	_handle_bucket_hold(delta)
 
 # ─── GRAB ──────────────────────────────────────────────────────────────────────
 
@@ -97,7 +111,18 @@ func _input(event: InputEvent) -> void:
 	# ESC
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		get_tree().quit()
-
+		
+	# Modo colocación de bucket
+	if placing_bucket:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			_place_bucket()
+			get_viewport().set_input_as_handled()
+			return
+		if Input.is_action_just_pressed("interact"):
+			_cancel_bucket_placement()
+			get_viewport().set_input_as_handled()
+			return
+	
 	# E → intentar recoger herramienta o interactuar
 	if Input.is_action_just_pressed("interact"):
 		# — Recoger herramientas del piso —
@@ -105,28 +130,41 @@ func _input(event: InputEvent) -> void:
 		if hit:
 			if hit.is_in_group("brooms"):
 				_pick_up_tool(hit, "broom")
+				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("mops"):
 				_pick_up_tool(hit, "mop")
+				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("trash_bags"):
 				_pick_up_tool(hit, "trash_bag")
+				get_viewport().set_input_as_handled()
 				return
 			# — Recoger basura con la bolsa equipada —
 			elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
 				_collect_trash_with_bag(hit)
+				get_viewport().set_input_as_handled()
 				return
 		var interacted = interact_cast.get_collider()
-		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
-			interacted.action_use()
+		if interacted and interacted.is_in_group("Interactable"):
+			var target = interacted
+			if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
+				target = target.get_parent()
+			if target.has_method("action_use"):
+				target.action_use()
+				get_viewport().set_input_as_handled()
 	
 	if Input.is_action_just_pressed("drop"):
 		drop_current_tool()
 	
 		# Interactuables genéricos
 		var interacted = interact_cast.get_collider()
-		if interacted and interacted.is_in_group("Interactable") and interacted.has_method("action_use"):
-			interacted.action_use()
+		if interacted and interacted.is_in_group("Interactable"):
+			var target = interacted
+			if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
+				target = target.get_parent()
+			if target.has_method("action_use"):
+				target.action_use()
 
 	# Click izquierdo → usar herramienta o agarrar basura
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -391,3 +429,191 @@ func _on_bag_full(bag_node: RigidBody3D) -> void:
 
 	# Destruir la bolsa vacía AL FINAL
 	bag_node.queue_free()
+	
+func _update_interact_hint() -> void:
+	# Si estamos en modo colocación de bucket, mostrar hint de colocación
+	if placing_bucket:
+		interact_hint.text = "[Click] Colocar — [E] Cancelar"
+		interact_hint.visible = true
+		return
+ 
+	var hit = raycast.get_collider()
+	var interacted = interact_cast.get_collider()
+ 
+	# Chequear raycast principal (herramientas)
+	if hit:
+		if hit.is_in_group("brooms"):
+			interact_hint.text = "[E] Agarrar escoba"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("mops"):
+			interact_hint.text = "[E] Agarrar mopa"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("trash_bags"):
+			interact_hint.text = "[E] Agarrar bolsa"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
+			interact_hint.text = "[Click] Recoger basura"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("Trash"):
+			interact_hint.text = "[Click] Agarrar"
+			interact_hint.visible = true
+			return
+ 
+	# Chequear interact_cast (interactables)
+	if interacted:
+		var target = interacted
+		if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
+			target = target.get_parent()
+ 
+		if target.has_method("action_use"):
+			# Hints específicos según el tipo
+			if target.is_in_group("bucket"):
+				if equipped_type == "mop":
+					interact_hint.text = "[E] Lavar mopa"
+				else:
+					interact_hint.text = "[E] Agarrar balde"
+				interact_hint.visible = true
+				return
+			elif target.is_in_group("Interactable"):
+				interact_hint.text = "[E] Interactuar"
+				interact_hint.visible = true
+				return
+ 
+	# Si no hay nada interactuable, ocultar
+	interact_hint.visible = false
+ 
+ 
+# ─── BUCKET MOVIBLE ───────────────────────────────────────────────────────────
+ 
+func _handle_bucket_hold(delta: float) -> void:
+	# Si estamos en modo colocación, no procesar el hold
+	if placing_bucket:
+		return
+ 
+	var interacted = interact_cast.get_collider()
+	var target = interacted
+	if target and not target.is_in_group("bucket") and target.get_parent().is_in_group("bucket"):
+		target = target.get_parent()
+ 
+	# Detectar si estamos apuntando al bucket y manteniendo E
+	if target and target.is_in_group("bucket") and Input.is_action_pressed("interact") and equipped_type != "mop":
+		holding_e_on_bucket = true
+		bucket_hold_timer += delta
+ 
+		if bucket_hold_timer >= BUCKET_HOLD_TIME:
+			_pick_up_bucket(target.get_parent() if not target.is_in_group("bucket") else target)
+			bucket_hold_timer = 0.0
+			holding_e_on_bucket = false
+	else:
+		if holding_e_on_bucket:
+			bucket_hold_timer = 0.0
+			holding_e_on_bucket = false
+ 
+ 
+func _pick_up_bucket(bucket_node: Node3D) -> void:
+	bucket_in_hand = bucket_node
+	placing_bucket = true
+ 
+	# Ocultar el bucket real
+	bucket_node.visible = false
+	# Desactivar colisión del bucket
+	for child in bucket_node.get_children():
+		if child is CollisionShape3D or child is Area3D:
+			child.set_deferred("monitoring", false) if child is Area3D else null
+			child.set_deferred("disabled", true) if child is CollisionShape3D else null
+ 
+	# Crear preview transparente
+	_create_bucket_preview(bucket_node)
+ 
+ 
+func _create_bucket_preview(bucket_node: Node3D) -> void:
+	# Duplicar la mesh del bucket para la preview
+	bucket_preview = MeshInstance3D.new()
+	
+	# Buscar el MeshInstance3D del bucket original
+	for child in bucket_node.get_children():
+		if child is MeshInstance3D:
+			bucket_preview.mesh = child.mesh
+			break
+ 
+	# Material transparente azulado
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color(0.3, 0.6, 1.0, 0.4)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	bucket_preview.set_surface_override_material(0, mat)
+ 
+	get_tree().current_scene.add_child(bucket_preview)
+ 
+ 
+func _update_bucket_preview() -> void:
+	if not placing_bucket or not bucket_preview:
+		return
+ 
+	# Raycast hacia el suelo desde la cámara
+	var space_state = get_world_3d().direct_space_state
+	var cam_origin = cam.global_transform.origin
+	var cam_forward = -cam.global_transform.basis.z
+	
+	var query = PhysicsRayQueryParameters3D.create(
+		cam_origin,
+		cam_origin + cam_forward * 5.0
+	)
+	query.exclude = [self]
+	var result = space_state.intersect_ray(query)
+ 
+	if result:
+		# Siempre pegado al suelo — solo usar la Y del punto de impacto
+		var pos = result.position
+		bucket_preview.global_transform.origin = Vector3(pos.x, pos.y + 0.3, pos.z)
+		bucket_preview.global_transform.basis = Basis.IDENTITY
+		bucket_preview.visible = true
+	else:
+		bucket_preview.visible = false
+ 
+ 
+func _place_bucket() -> void:
+	if not placing_bucket or not bucket_in_hand:
+		return
+ 
+	if bucket_preview and bucket_preview.visible:
+		# Colocar el bucket en la posición del preview
+		bucket_in_hand.global_transform.origin = bucket_preview.global_transform.origin
+		bucket_in_hand.visible = true
+ 
+		# Reactivar colisiones
+		for child in bucket_in_hand.get_children():
+			if child is CollisionShape3D:
+				child.set_deferred("disabled", false)
+			elif child is Area3D:
+				child.set_deferred("monitoring", true)
+ 
+	# Limpiar preview
+	if bucket_preview:
+		bucket_preview.queue_free()
+		bucket_preview = null
+ 
+	bucket_in_hand = null
+	placing_bucket = false
+ 
+ 
+func _cancel_bucket_placement() -> void:
+	# Restaurar bucket en su posición original
+	if bucket_in_hand:
+		bucket_in_hand.visible = true
+		for child in bucket_in_hand.get_children():
+			if child is CollisionShape3D:
+				child.set_deferred("disabled", false)
+			elif child is Area3D:
+				child.set_deferred("monitoring", true)
+ 
+	if bucket_preview:
+		bucket_preview.queue_free()
+		bucket_preview = null
+ 
+	bucket_in_hand = null
+	placing_bucket = false
