@@ -2,6 +2,7 @@ extends RigidBody3D
 
 const MAX_TRASH := 5
 var current_trash := 0
+var quantity := 1 
 
 # Señal para que el player sepa que se llenó
 signal bag_full(bag_node)
@@ -19,3 +20,6 @@ func collect_item() -> void:
 
 func get_fill_ratio() -> float:
 	return float(current_trash) / float(MAX_TRASH)
+
+func reset_fill() -> void:
+	current_trash = 0

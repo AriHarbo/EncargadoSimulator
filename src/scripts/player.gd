@@ -55,6 +55,8 @@ const BUCKET_HOLD_TIME: float = 0.6        # Segundos que hay que mantener E
 var bucket_hold_timer: float = 0.0
 var holding_e_on_bucket: bool = false
 
+var showing_message := false
+
 signal broom_sweep
 
 func _ready() -> void:
@@ -184,25 +186,32 @@ func _input(event: InputEvent) -> void:
 			grab_distance = clamp(grab_distance - 0.2, 1.0, 3.0)
 
 # ─── RECOGER / SOLTAR HERRAMIENTAS ────────────────────────────────────────────
+func give_item(item_node: RigidBody3D, type: String) -> bool:
+	if hotbar.has_item(item_node):
+		return true
+
+	var added = hotbar.try_add_item(item_node, type)
+	if not added:
+		return false
+
+	if hotbar.has_item(item_node):
+		# Se agregó como nuevo ítem físico (no se stackeó): prepararlo
+		item_node.freeze = true
+		item_node.visible = false
+		item_node.set_collision_layer_value(1, false)
+		item_node.set_collision_mask_value(1, false)
+
+		var slot_index = hotbar.get_slot_index(item_node)
+		if slot_index == hotbar.selected_slot and not equipped_item:
+			_attach_to_hand(item_node, type)
+	else:
+		# Se stackeó en un ítem existente: este nodo físico sobra
+		item_node.queue_free()
+
+	return true
 
 func _pick_up_tool(tool_node: RigidBody3D, type: String) -> void:
-	if hotbar.has_item(tool_node):
-		return
-
-	var slot_index = hotbar.get_free_slot()
-	if slot_index == -1:
-		print("Hotbar llena")
-		return
-
-	tool_node.freeze = true
-	tool_node.visible = false
-	tool_node.set_collision_layer_value(1, false)
-	tool_node.set_collision_mask_value(1, false)
-
-	hotbar.add_item_to_slot(slot_index, tool_node, type)
-
-	if slot_index == hotbar.selected_slot and not equipped_item:
-		_attach_to_hand(tool_node, type)
+	give_item(tool_node, type)
 
 # Llamado por la hotbar al cambiar de slot
 func equip_item(tool_node, type: String) -> void:
@@ -246,39 +255,56 @@ func _detach_from_hand() -> void:
 
 func drop_current_tool() -> void:
 	if not equipped_item:
-		# Incluso si no hay ítem equipado visualmente, limpiar el slot
 		hotbar.remove_item_from_slot(hotbar.selected_slot)
 		return
 
+	var qty = equipped_item.get("quantity")
+	if qty != null and qty > 1:
+		# Solo tirar UNA copia, quedarte con el resto en mano
+		equipped_item.quantity = qty - 1
+		hotbar.refresh_slots()
+		_spawn_dropped_copy(equipped_item)
+		return
+
+	# Comportamiento original: queda 1 (o el item no tiene quantity) → tirar todo
 	var item = equipped_item
 	var slot = hotbar.selected_slot
-	
+
 	if equipped_type == "trash_bag":
 		bag_fill_bar.hide_bar()
-	
-	# Limpiar referencias ANTES de reparent para evitar errores
+
 	equipped_item = null
 	equipped_type = ""
 
-	# Sacar el ítem de la mano y devolverlo al mundo
 	item.reparent(get_tree().current_scene)
-	
-	
-	# Tirarlo un poco hacia adelante para que no quede dentro del jugador
+
 	var drop_offset = -cam.global_transform.basis.z * 1.2 + Vector3(0, 0.3, 0)
 	item.global_transform.origin = cam.global_transform.origin + drop_offset
 
-	# Restaurar física
 	item.freeze = false
 	item.visible = true
 	item.set_collision_layer_value(1, true)
 	item.set_collision_mask_value(1, true)
-
-	# Impulso leve hacia adelante
 	item.apply_central_impulse(-cam.global_transform.basis.z * 2.0)
 
-	# Limpiar slot en hotbar
 	hotbar.remove_item_from_slot(slot)
+
+func _spawn_dropped_copy(source_item: Node) -> void:
+	if source_item.scene_file_path == "":
+		push_warning("No se pudo clonar el item: scene_file_path vacío")
+		return
+
+	var copy = load(source_item.scene_file_path).instantiate()
+	get_tree().current_scene.add_child(copy)
+
+	var drop_offset = -cam.global_transform.basis.z * 1.2 + Vector3(0, 0.3, 0)
+	copy.global_transform.origin = cam.global_transform.origin + drop_offset
+
+	copy.freeze = false
+	copy.visible = true
+	copy.set_collision_layer_value(1, true)
+	copy.set_collision_mask_value(1, true)
+	copy.apply_central_impulse(-cam.global_transform.basis.z * 2.0)
 
 # ─── USO DE HERRAMIENTAS ───────────────────────────────────────────────────────
 
@@ -413,24 +439,26 @@ func _collect_trash_with_bag(trash_node: Node) -> void:
 		bag_fill_bar.update_fill(equipped_item.get_fill_ratio())
 
 func _on_bag_full(bag_node: RigidBody3D) -> void:
-	bag_fill_bar.hide_bar()
-
-	var slot = hotbar.selected_slot
-
-	# Limpiar ANTES de tocar el nodo
-	equipped_item = null
-	equipped_type = ""
-	hotbar.remove_item_from_slot(slot)
-
-	# Spawnear bolsa llena
 	var full_bag = FULL_TRASH_BAG_SCENE.instantiate()
 	get_tree().current_scene.add_child(full_bag)
 	full_bag.global_transform.origin = global_transform.origin + (-transform.basis.z * 1.0) + Vector3(0, 0.3, 0)
 
-	# Destruir la bolsa vacía AL FINAL
-	bag_node.queue_free()
+	if bag_node.quantity > 1:
+		bag_node.quantity -= 1
+		bag_node.reset_fill()
+		hotbar.refresh_slots()
+		bag_fill_bar.update_fill(bag_node.get_fill_ratio())
+	else:
+		bag_fill_bar.hide_bar()
+		var slot = hotbar.selected_slot
+		equipped_item = null
+		equipped_type = ""
+		hotbar.remove_item_from_slot(slot)
+		bag_node.queue_free()
 	
 func _update_interact_hint() -> void:
+	if showing_message:
+		return
 	# Si estamos en modo colocación de bucket, mostrar hint de colocación
 	if placing_bucket:
 		interact_hint.text = "[Click] Colocar — [E] Cancelar"
@@ -617,3 +645,10 @@ func _cancel_bucket_placement() -> void:
  
 	bucket_in_hand = null
 	placing_bucket = false
+
+func show_message(text: String, duration: float = 1.5) -> void:
+	showing_message = true
+	interact_hint.text = text
+	interact_hint.visible = true
+	await get_tree().create_timer(duration).timeout
+	showing_message = false

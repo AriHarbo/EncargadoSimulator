@@ -64,8 +64,6 @@ func refresh_slots() -> void:
 	for i in range(slots.size()):
 		var slot = slots[i]
 		var icon = slot.get_node_or_null("Icon")
-
-		# Limpiar labels previos
 		for child in slot.get_children():
 			if child != icon and child is Label:
 				child.queue_free()
@@ -73,12 +71,28 @@ func refresh_slots() -> void:
 		var entry = hotbar_items[i]
 		if entry != null:
 			var label = Label.new()
-			label.text = entry["type"].capitalize()   # "Broom" / "Mop"
+			label.name = "TypeLabel"
+			label.text = entry["type"].capitalize()
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			label.custom_minimum_size = Vector2(64, 64)
 			slot.add_child(label)
 			if icon: icon.visible = false
+
+			# Cantidad genérica: cualquier item cuyo nodo tenga "quantity" > 1
+			if is_instance_valid(entry["node"]):
+				var qty = entry["node"].get("quantity")
+				if qty != null and qty > 1:
+					var qty_label = Label.new()
+					qty_label.name = "QtyLabel"
+					qty_label.text = str(qty)
+					qty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+					qty_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+					qty_label.custom_minimum_size = Vector2(64, 64)
+					qty_label.add_theme_color_override("font_color", Color(1, 1, 1))
+					qty_label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+					qty_label.add_theme_constant_override("outline_size", 3)
+					slot.add_child(qty_label)
 		else:
 			if icon: icon.visible = false
 
@@ -87,3 +101,24 @@ func has_item(tool_node: RigidBody3D) -> bool:
 		if entry != null and entry["node"] == tool_node:
 			return true
 	return false
+
+func get_slot_index(node) -> int:
+	for i in range(hotbar_items.size()):
+		if hotbar_items[i] != null and hotbar_items[i]["node"] == node:
+			return i
+	return -1
+	
+func try_add_item(node: RigidBody3D, type: String) -> bool:
+	for entry in hotbar_items:
+		if entry != null and entry["type"] == type and is_instance_valid(entry["node"]):
+			var qty = entry["node"].get("quantity")
+			if qty != null:
+				entry["node"].quantity = qty + 1
+				refresh_slots()
+				return true
+
+	var free_slot = get_free_slot()
+	if free_slot == -1:
+		return false
+	add_item_to_slot(free_slot, node, type)
+	return true
