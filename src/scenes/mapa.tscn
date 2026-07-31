@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://d15olcwlgxrr5"]
+[gd_scene load_steps=31 format=3 uid="uid://d15olcwlgxrr5"]
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://df0m7nve7e350" path="res://src/scenes/blood_stain.tscn" id="14_ohegu"]
 [ext_resource type="PackedScene" uid="uid://rjj1junjy0u8" path="res://src/scenes/dirtiness.tscn" id="15_aus5l"]
 [ext_resource type="PackedScene" uid="uid://ucn50j0d1ct" path="res://src/scenes/trash_item.tscn" id="16_codxj"]
+[ext_resource type="PackedScene" uid="uid://ltpr2kkubd8d" path="res://src/scenes/npc.tscn" id="17_aus5l"]
 [ext_resource type="PackedScene" uid="uid://ddmfvgvvxmshr" path="res://src/scenes/bag_dispenser.tscn" id="18_codxj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohegu"]
@@ -164,6 +165,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000555992, 0.0304792, -0.0
 collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Cuarto_conserje/TaskBoard/StaticBody3D" groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.14982, -0.0299054, 0.0620227)
 shape = SubResource("BoxShape3D_608hb")
 
 [node name="Pasillo" type="Node3D" parent="Building"]
@@ -356,3 +358,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.13242, 0.5, -2.26618)
 
 [node name="BagDispenser" parent="." instance=ExtResource("18_codxj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.08631, 1.27052, 9.6941)
+
+[node name="npc_recepcionista" parent="." groups=["Interactable"] instance=ExtResource("17_aus5l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.51294, 1, -1.04478)
+npc_name = "Recepcionista"
+npc_id = "npc_recepcionista"
+lineas_dialogo = ["holaaa", "puto de mierda"]
+tarea_a_completar = "tarea_01_presentaciones"
+
+[node name="npc_bartender" parent="." groups=["Interactable"] instance=ExtResource("17_aus5l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.24704, 1, 3.34603)
+npc_name = "Bartender"
+npc_id = "npc_bartender"
+lineas_dialogo = ["hola, anashe", "chupala"]
+tarea_a_completar = "tarea_01_presentaciones"
