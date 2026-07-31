@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://c7jmx7nqlr24b" path="res://src/scripts/dirty_area.gd" id="7_up4k5"]
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/mop.tscn" id="8_oi740"]
 [ext_resource type="PackedScene" uid="uid://cbh376h7jfa2y" path="res://src/scenes/bucket.tscn" id="9_ii78r"]
-[ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/trash_bag.tscn" id="10_vfd3t"]
 [ext_resource type="PackedScene" uid="uid://bmamutli16np2" path="res://src/scenes/dialogo_ui.tscn" id="11_vfd3t"]
 [ext_resource type="PackedScene" uid="uid://k3jtsesbh2e0" path="res://src/scenes/task_board_ui.tscn" id="12_608hb"]
 [ext_resource type="PackedScene" uid="uid://ddvxrmpmuh6su" path="res://src/scenes/incoming_call.tscn" id="13_aus5l"]
@@ -18,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://rjj1junjy0u8" path="res://src/scenes/dirtiness.tscn" id="15_aus5l"]
 [ext_resource type="PackedScene" uid="uid://ucn50j0d1ct" path="res://src/scenes/trash_item.tscn" id="16_codxj"]
 [ext_resource type="PackedScene" uid="uid://ltpr2kkubd8d" path="res://src/scenes/npc.tscn" id="18_codxj"]
+[ext_resource type="PackedScene" uid="uid://ddmfvgvvxmshr" path="res://src/scenes/bag_dispenser.tscn" id="18_k0oyl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohegu"]
 albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
@@ -329,9 +329,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.55169, 0.66406, 9.10771)
 [node name="Bucket" parent="." groups=["bucket"] instance=ExtResource("9_ii78r")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.92457, 0.233759, 9.25912)
 
-[node name="TrashBag" parent="." instance=ExtResource("10_vfd3t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.48013, 0.384844, 9.4027)
-
 [node name="DialogoUI" parent="." instance=ExtResource("11_vfd3t")]
 
 [node name="TaskBoardUI" parent="." instance=ExtResource("12_608hb")]
@@ -388,3 +385,6 @@ npc_name = "Bartender"
 npc_id = "npc_bartender"
 lineas_dialogo = ["Me llamo Lucas y soy el que prepara los tragos, es un gusto conocerte", "Si en algún momento te supera el estrés, vení a hablar conmigo que seguro pueda ayudarte."]
 tarea_a_completar = "tarea_01_presentaciones"
+
+[node name="BagDispenser" parent="." instance=ExtResource("18_k0oyl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.25474, 1.16185, 8.99973)
