@@ -172,6 +172,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000555992, 0.0304792, -0.0
 collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Cuarto_conserje/TaskBoard/StaticBody3D" groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.15552, -0.0141422, 0.0961461)
 shape = SubResource("BoxShape3D_608hb")
 
 [node name="Pasillo" type="Node3D" parent="Building"]
