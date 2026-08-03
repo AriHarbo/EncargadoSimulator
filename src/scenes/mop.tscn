@@ -16,9 +16,8 @@ size = Vector3(0.35, 0.08, 0.15)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ymsg"]
 albedo_color = Color(0.878431, 0.847059, 0.752941, 1)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_88ms4"]
-radius = 0.05
-height = 1.2
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ymsg"]
+size = Vector3(0.315582, 1.20026, 0.138672)
 
 [sub_resource type="Animation" id="Animation_4pvbp"]
 length = 0.001
@@ -46,6 +45,7 @@ _data = {
 }
 
 [node name="Mop" type="RigidBody3D" groups=["mops"]]
+continuous_cd = true
 script = ExtResource("1_5ymsg")
 
 [node name="MopMesh" type="Node3D" parent="."]
@@ -60,8 +60,8 @@ mesh = SubResource("BoxMesh_88ms4")
 surface_material_override/0 = SubResource("StandardMaterial3D_5ymsg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-shape = SubResource("CapsuleShape3D_88ms4")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00416565, 0.589838, -0.0263672)
+shape = SubResource("BoxShape3D_5ymsg")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

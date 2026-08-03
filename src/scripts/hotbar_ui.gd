@@ -24,14 +24,16 @@ func select_slot(index: int) -> void:
 	update_visual()
 
 	var player = get_tree().get_first_node_in_group("player")
+	var entry = hotbar_items[selected_slot]
 	if player:
-		var entry = hotbar_items[selected_slot]
-		if entry:
+		if entry and player.equipped_item == entry["node"]:
+			# Ya está en las manos → intercalar: guardarlo (toggle off)
+			player.equip_item(null, "")
+		elif entry:
 			player.equip_item(entry["node"], entry["type"])
 		else:
 			player.equip_item(null, "")
 
-	var entry = hotbar_items[selected_slot]
 	slot_changed.emit(
 		entry["node"] if entry else null,
 		entry["type"] if entry else ""

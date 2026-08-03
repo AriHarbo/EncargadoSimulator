@@ -5,6 +5,12 @@ var current_dirt := 0
 
 @onready var head_mesh = $MopMesh/Head
 
+func _physics_process(_delta: float) -> void:
+	if global_position.y < -5.0:
+		global_position = Vector3(0, 1.0, 0)
+		linear_velocity = Vector3.ZERO
+		angular_velocity = Vector3.ZERO
+
 # Colores según suciedad
 var color_clean := Color("#E0D8C0")
 var color_dirty := Color("#8B0000")
