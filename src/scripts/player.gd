@@ -167,7 +167,7 @@ func _input(event: InputEvent) -> void:
 				target = target.get_parent()
 			if target.has_method("action_use"):
 				target.action_use()
-
+				
 	# Click izquierdo → usar herramienta o agarrar basura
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -496,10 +496,17 @@ func _update_interact_hint() -> void:
 		var target = interacted
 		if not target.has_method("action_use") and target.get_parent().has_method("action_use"):
 			target = target.get_parent()
- 
+
 		if target.has_method("action_use"):
-			# Hints específicos según el tipo
-			if target.is_in_group("bucket"):
+			if target.has_method("get_interact_hint"):
+				var hint_text: String = target.get_interact_hint(self)
+				if hint_text == "":
+					interact_hint.visible = false
+				else:
+					interact_hint.text = hint_text
+					interact_hint.visible = true
+				return
+			elif target.is_in_group("bucket"):
 				if equipped_type == "mop":
 					interact_hint.text = "[E] Lavar mopa"
 				else:
@@ -652,3 +659,15 @@ func show_message(text: String, duration: float = 1.5) -> void:
 	interact_hint.visible = true
 	await get_tree().create_timer(duration).timeout
 	showing_message = false
+
+func take_equipped_item() -> RigidBody3D:
+	if not equipped_item:
+		return null
+	var item = equipped_item
+	var slot = hotbar.selected_slot
+	if equipped_type == "trash_bag":
+		bag_fill_bar.hide_bar()
+	equipped_item = null
+	equipped_type = ""
+	hotbar.remove_item_from_slot(slot)
+	return item

@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://d15olcwlgxrr5"]
+[gd_scene load_steps=32 format=3 uid="uid://d15olcwlgxrr5"]
 
 [ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/mapa.gd" id="1_csrmo"]
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_rdlyd"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://ucn50j0d1ct" path="res://src/scenes/trash_item.tscn" id="16_codxj"]
 [ext_resource type="PackedScene" uid="uid://ltpr2kkubd8d" path="res://src/scenes/npc.tscn" id="17_aus5l"]
 [ext_resource type="PackedScene" uid="uid://ddmfvgvvxmshr" path="res://src/scenes/bag_dispenser.tscn" id="18_codxj"]
+[ext_resource type="PackedScene" uid="uid://c8xwpaq3wf3p6" path="res://src/scenes/shelf.tscn" id="19_wmq3s"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohegu"]
 albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
@@ -315,6 +316,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.92457, 0.233759, 9.25912)
 [node name="TaskBoardUI" parent="." instance=ExtResource("12_608hb")]
 
 [node name="IncomingCall" parent="." instance=ExtResource("13_aus5l")]
+ring_sound = null
 
 [node name="Trash" parent="." instance=ExtResource("13_cu83j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.64269, 0.471683, 2.94865)
@@ -372,3 +374,6 @@ npc_name = "Bartender"
 npc_id = "npc_bartender"
 lineas_dialogo = ["hola, anashe", "chupala"]
 tarea_a_completar = "tarea_01_presentaciones"
+
+[node name="Shelf" parent="." instance=ExtResource("19_wmq3s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.89167, 0.566077, 5.43134)
