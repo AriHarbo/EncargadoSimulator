@@ -29,6 +29,7 @@ shape = SubResource("BoxShape3D_jdrml")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.492721, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot1"]
 shape = SubResource("BoxShape3D_gnx7p")
@@ -39,6 +40,7 @@ shape = SubResource("BoxShape3D_gnx7p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0973748, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot2"]
 shape = SubResource("BoxShape3D_gnx7p")
@@ -49,6 +51,7 @@ shape = SubResource("BoxShape3D_gnx7p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104561, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot3"]
 shape = SubResource("BoxShape3D_gnx7p")
@@ -59,6 +62,7 @@ shape = SubResource("BoxShape3D_gnx7p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.296001, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot4"]
 shape = SubResource("BoxShape3D_gnx7p")
@@ -69,6 +73,7 @@ shape = SubResource("BoxShape3D_gnx7p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30701, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot5"]
 shape = SubResource("BoxShape3D_gnx7p")
@@ -79,6 +84,7 @@ shape = SubResource("BoxShape3D_gnx7p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.505981, 0.05, 0)
 collision_layer = 2
 script = ExtResource("1_vr80o")
+accepted_type = "bulb"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Slot6"]
 shape = SubResource("BoxShape3D_gnx7p")
