@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b2ot2ntp34wwj"]
+[gd_scene load_steps=19 format=3 uid="uid://b2ot2ntp34wwj"]
 
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_jv0ip"]
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/mop.tscn" id="2_dyx80"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/trash_bag.tscn" id="9_276cp"]
 [ext_resource type="PackedScene" uid="uid://bt02n2pltoch5" path="res://src/scenes/Elevator.tscn" id="10_d8eax"]
 [ext_resource type="PackedScene" uid="uid://boxhsbo1q1hpq" path="res://src/scenes/computer_shop.tscn" id="11_tmjf4"]
+[ext_resource type="PackedScene" uid="uid://c8xwpaq3wf3p6" path="res://src/scenes/shelf.tscn" id="12_mfwth"]
 [ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/shop_ui.tscn" id="12_shop"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/dumpster.tscn" id="13_idtb6"]
 
@@ -94,6 +95,9 @@ transform = Transform3D(-0.0163355, 0, -0.999867, 0, 1, 0, 0.999867, 0, -0.01633
 [node name="ComputerShop" parent="Structure" node_paths=PackedStringArray("shop_ui") instance=ExtResource("11_tmjf4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.595479, 0.026094, 6.52306)
 shop_ui = NodePath("../../ShopUI")
+
+[node name="Shelf" parent="Structure" instance=ExtResource("12_mfwth")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19699, 0.97882, 6.62592)
 
 [node name="ShopUI" parent="." instance=ExtResource("12_shop")]
 
