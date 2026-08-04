@@ -16,6 +16,10 @@ var rotation_x := 0.0
 @onready var hotbar = $UI/HotbarUI  
 @onready var bag_fill_bar = $UI/BagFillBar
 @onready var interact_hint = $UI/InteractHint
+@onready var money_label = $UI/MoneyLabel
+
+# MONEY
+@export var money := 100
 
 # VARIABLES PARA AGARRE DE OBJETOS
 var grabbed_object: RigidBody3D = null
@@ -82,6 +86,24 @@ func _ready() -> void:
 	normal_collision_y = collision_shape.position.y
 	add_to_group("player")
 	interact_hint.visible = false
+	_update_money_label()
+
+# ─── MONEY ────────────────────────────────────────────────────────────────────
+
+func add_money(amount: int) -> void:
+	money += amount
+	_update_money_label()
+
+func spend_money(amount: int) -> bool:
+	if money < amount:
+		return false
+	money -= amount
+	_update_money_label()
+	return true
+
+func _update_money_label() -> void:
+	if money_label:
+		money_label.text = "$%d" % money
 
 func _physics_process(delta: float) -> void:
 	if get_tree().get_first_node_in_group("minigame_active"):

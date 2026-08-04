@@ -104,4 +104,5 @@ drop={
 
 [physics]
 
+common/physics_ticks_per_second=180
 3d/physics_ticks_per_second=120

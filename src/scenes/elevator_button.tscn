@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dbln36dnvapxe"]
+[gd_scene load_steps=6 format=3 uid="uid://dbln36dnvapxe"]
 
 [ext_resource type="PackedScene" uid="uid://e17u4okhyevd" path="res://src/scenes/interact_generic.tscn" id="1_8q7dt"]
 [ext_resource type="Script" uid="uid://dvydx0oao5evd" path="res://src/scripts/elevator_button.gd" id="2_8q7dt"]
@@ -6,6 +6,8 @@
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_78wi2"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_hke8p"]
+
+[sub_resource type="AudioStream" id="AudioStream_8q7dt"]
 
 [node name="ElevatorButton" instance=ExtResource("1_8q7dt")]
 collision_layer = 2
@@ -23,7 +25,7 @@ transform = Transform3D(0.0500662, 0, -6.7622e-10, -6.76272e-10, 4.01914e-10, -0
 mesh = SubResource("CylinderMesh_hke8p")
 
 [node name="ButtonLight" type="OmniLight3D" parent="." index="2"]
-light_energy = 0.03
+light_energy = 0.01
 
 [node name="ButtonLabel" type="Label" parent="." index="3"]
 offset_right = 40.0
@@ -32,3 +34,4 @@ text = "
 "
 
 [node name="ButtonSound" type="AudioStreamPlayer3D" parent="." index="4"]
+stream = SubResource("AudioStream_8q7dt")
