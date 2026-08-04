@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
+const CAMERA_TRANSITION_TIME := 0.6
 var sens := 0.1
 var rotation_x := 0.0
 
@@ -15,6 +16,10 @@ var rotation_x := 0.0
 @onready var hotbar = $UI/HotbarUI  
 @onready var bag_fill_bar = $UI/BagFillBar
 @onready var interact_hint = $UI/InteractHint
+@onready var money_label = $UI/MoneyLabel
+
+# MONEY
+@export var money := 100
 
 # VARIABLES PARA AGARRE DE OBJETOS
 var grabbed_object: RigidBody3D = null
@@ -26,6 +31,17 @@ var equipped_type: String = ""          # "broom", "mop", o ""
 
 # VARIABLES COOLDOWN USO
 var tool_on_cooldown := false
+
+# VARIABLES AGACHARSE
+const CROUCH_SPEED_MULT := 0.3   # 70% más lento
+const CROUCH_COLLISION_HEIGHT := 0.7
+var is_crouching := false
+var crouch_cam_offset := 0.0
+
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var capsule_shape: CapsuleShape3D = collision_shape.shape
+var normal_collision_height := 1.62
+var normal_collision_y := 0.0
 
 # VARIABLES CAMINAR
 var bob_time := 0.0
@@ -57,19 +73,47 @@ var holding_e_on_bucket: bool = false
 
 var showing_message := false
 
+# Camera blending for minigame transitions
+var _blend_camera: Camera3D = null
+var _blend_tween: Tween = null
+
 signal broom_sweep
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	base_camera_y = cam.position.y
+	normal_collision_height = capsule_shape.height
+	normal_collision_y = collision_shape.position.y
 	add_to_group("player")
 	interact_hint.visible = false
+	_update_money_label()
+
+# ─── MONEY ────────────────────────────────────────────────────────────────────
+
+func add_money(amount: int) -> void:
+	money += amount
+	_update_money_label()
+
+func spend_money(amount: int) -> bool:
+	if money < amount:
+		return false
+	money -= amount
+	_update_money_label()
+	return true
+
+func _update_money_label() -> void:
+	if money_label:
+		money_label.text = "$%d" % money
 
 func _physics_process(delta: float) -> void:
+	if get_tree().get_first_node_in_group("minigame_active"):
+		interact_hint.visible = false
+		return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+	_update_crouch(delta)
 	movement(delta)
 	move_and_slide()
 	_update_walk_bob(delta)
@@ -103,6 +147,10 @@ func _handle_grabbed_object(delta: float) -> void:
 # ─── INPUT ─────────────────────────────────────────────────────────────────────
 
 func _input(event: InputEvent) -> void:
+	# While a minigame is active, ignore all player input (the minigame handles its own keys)
+	if get_tree().get_first_node_in_group("minigame_active"):
+		return
+
 	# Mouse look
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * sens))
@@ -147,6 +195,11 @@ func _input(event: InputEvent) -> void:
 				_collect_trash_with_bag(hit)
 				get_viewport().set_input_as_handled()
 				return
+			elif hit.is_in_group("bulbs"):
+				var bulb_type = "burnt_bulb" if hit.is_in_group("burnt_bulbs") else "bulb"
+				_pick_up_tool(hit, bulb_type)
+				get_viewport().set_input_as_handled()
+				return
 		var interacted = interact_cast.get_collider()
 		if interacted and interacted.is_in_group("Interactable"):
 			var target = interacted
@@ -185,6 +238,47 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			grab_distance = clamp(grab_distance - 0.2, 1.0, 3.0)
 
+# ─── CAMERA TRANSITIONS ───────────────────────────────────────────────────────
+
+func enter_minigame_camera(target: Camera3D) -> void:
+	_tween_to_camera(target)
+
+func exit_minigame_camera(on_finished: Callable = Callable()) -> void:
+	_tween_to_camera(cam, on_finished)
+
+func _tween_to_camera(target: Camera3D, on_finished: Callable = Callable()) -> void:
+	# Cancel any previous blend still in progress
+	if _blend_tween and _blend_tween.is_valid():
+		_blend_tween.kill()
+	if is_instance_valid(_blend_camera):
+		_blend_camera.queue_free()
+
+	var current_cam: Camera3D = get_viewport().get_camera_3d()
+	var from_transform := current_cam.global_transform
+	var from_fov := current_cam.fov
+
+	var temp := Camera3D.new()
+	get_tree().current_scene.add_child(temp)
+	temp.global_transform = from_transform
+	temp.fov = from_fov
+	temp.current = true
+	_blend_camera = temp
+
+	var tw := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	_blend_tween = tw
+	tw.tween_property(temp, "global_transform", target.global_transform, CAMERA_TRANSITION_TIME)
+	tw.parallel().tween_property(temp, "fov", target.fov, CAMERA_TRANSITION_TIME)
+	tw.tween_callback(func():
+		if is_instance_valid(temp):
+			temp.queue_free()
+		if _blend_camera == temp:
+			_blend_camera = null
+		_blend_tween = null
+		target.current = true
+		if on_finished.is_valid():
+			on_finished.call()
+	)
+
 # ─── RECOGER / SOLTAR HERRAMIENTAS ────────────────────────────────────────────
 func give_item(item_node: RigidBody3D, type: String) -> bool:
 	if hotbar.has_item(item_node):
@@ -209,6 +303,24 @@ func give_item(item_node: RigidBody3D, type: String) -> bool:
 		item_node.queue_free()
 
 	return true
+
+# Consume UNA unidad del tipo indicado del hotbar. Devuelve false si no hay stock.
+func consume_item(item_type: String) -> bool:
+	for i in range(hotbar.hotbar_items.size()):
+		var entry = hotbar.hotbar_items[i]
+		if entry and entry["type"] == item_type:
+			var node = entry["node"]
+			var qty = node.get("quantity")
+			if qty != null and qty > 1:
+				node.quantity = qty - 1
+				hotbar.refresh_slots()
+			else:
+				if equipped_item == node:
+					_detach_from_hand()
+				hotbar.remove_item_from_slot(i)
+				node.queue_free()
+			return true
+	return false
 
 func _pick_up_tool(tool_node: RigidBody3D, type: String) -> void:
 	give_item(tool_node, type)
@@ -393,7 +505,7 @@ func _update_walk_bob(delta: float) -> void:
 	var moving = velocity.length() > 0.5 and is_on_floor()
 	if moving:
 		bob_time += delta * bob_speed
-		cam.position.y = base_camera_y + sin(bob_time) * bob_amount
+		cam.position.y = base_camera_y + crouch_cam_offset + sin(bob_time) * bob_amount * (0.5 if is_crouching else 1.0)
 		if sonidos_pasos.size() > 0:
 			paso_timer -= delta
 			if paso_timer <= 0.0:
@@ -401,7 +513,7 @@ func _update_walk_bob(delta: float) -> void:
 				audio.play()
 				paso_timer = paso_intervalo
 	else:
-		cam.position.y = lerp(cam.position.y, base_camera_y, delta * 10.0)
+		cam.position.y = lerp(cam.position.y, base_camera_y + crouch_cam_offset, delta * 10.0)
 		paso_timer = 0.0
 
 # ─── MOVIMIENTO ───────────────────────────────────────────────────────────────
@@ -413,12 +525,36 @@ func movement(delta: float) -> void:
 	if Input.is_action_pressed("move_left"):  input_dir -= transform.basis.x
 	if Input.is_action_pressed("move_right"): input_dir += transform.basis.x
 
-	input_dir = input_dir.normalized() * SPEED
-	velocity.x = input_dir.x
-	velocity.z = input_dir.z
+	input_dir = input_dir.normalized()
+	var speed = SPEED * (CROUCH_SPEED_MULT if is_crouching else 1.0)
+	velocity.x = input_dir.x * speed
+	velocity.z = input_dir.z * speed
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+
+# ─── AGACHARSE ─────────────────────────────────────────────────────────────────
+
+func _update_crouch(delta: float) -> void:
+	var want_crouch = Input.is_action_pressed("crouch")
+	if want_crouch:
+		is_crouching = true
+	elif is_crouching and _can_stand():
+		is_crouching = false
+
+	var target_height = CROUCH_COLLISION_HEIGHT if is_crouching else normal_collision_height
+	var target_y = normal_collision_y - (normal_collision_height - target_height) * 0.5
+	capsule_shape.height = target_height
+	collision_shape.position.y = target_y
+
+	crouch_cam_offset = lerp(crouch_cam_offset, -0.45 if is_crouching else 0.0, delta * 12.0)
+
+func _can_stand() -> bool:
+	var head = global_position + Vector3(0, collision_shape.position.y + capsule_shape.height * 0.5, 0)
+	var clearance = normal_collision_height - capsule_shape.height + 0.1
+	var query = PhysicsRayQueryParameters3D.create(head, head + Vector3(0, clearance, 0))
+	query.exclude = [self]
+	return not get_world_3d().direct_space_state.intersect_ray(query)
 
 # ─── BOLSA DE BASURA ──────────────────────────────────────────────────────────
 
@@ -486,6 +622,10 @@ func _update_interact_hint() -> void:
 			interact_hint.text = "[Click] Recoger basura"
 			interact_hint.visible = true
 			return
+		elif hit.is_in_group("bulbs"):
+			interact_hint.text = "[E] Agarrar bombilla"
+			interact_hint.visible = true
+			return
 		elif hit.is_in_group("Trash"):
 			interact_hint.text = "[Click] Agarrar"
 			interact_hint.visible = true
@@ -511,6 +651,10 @@ func _update_interact_hint() -> void:
 					interact_hint.text = "[E] Lavar mopa"
 				else:
 					interact_hint.text = "[E] Agarrar balde"
+				interact_hint.visible = true
+				return
+			elif target.is_in_group("luz_sockets"):
+				interact_hint.text = "[E] Cambiar bombilla"
 				interact_hint.visible = true
 				return
 			elif target.is_in_group("Interactable"):

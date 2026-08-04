@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvl8uhi7q6par"]
+
+[ext_resource type="Script" path="res://src/scripts/shop_ui.gd" id="1_su"]
+
+[node name="ShopUI" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_su")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(360, 220)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -110.0
+offset_right = 180.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "STORE"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MoneyLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Money: $0"
+
+[node name="PriceLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Trash bag: $20"
+
+[node name="BuyButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Buy"
+
+[node name="HintLabel" type="Label" parent="Panel"]
+layout_mode = 2
+offset_left = -3.0
+offset_top = 195.0
+offset_right = 357.0
+offset_bottom = 218.0
+text = "[E] Close"
+horizontal_alignment = 2

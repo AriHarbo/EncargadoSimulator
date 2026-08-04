@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://dviah3vhdnpid"]
+
+[ext_resource type="Script" uid="uid://we04oskq8epe" path="res://src/scripts/light_bulb.gd" id="1_bulb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_glass"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="Material_glass"]
+transparency = 1
+albedo_color = Color(0.13, 0.12, 0.11, 0.92)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_base"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.08
+
+[sub_resource type="StandardMaterial3D" id="Material_base"]
+albedo_color = Color(0.25, 0.22, 0.2, 1)
+metallic = 0.6
+roughness = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_col"]
+radius = 0.12
+
+[node name="BombillaQuemada" type="RigidBody3D" groups=["TrashItem", "bulbs", "burnt_bulbs"]]
+script = ExtResource("1_bulb")
+is_burnt = true
+
+[node name="Cristal" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("SphereMesh_glass")
+surface_material_override/0 = SubResource("Material_glass")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0)
+mesh = SubResource("CylinderMesh_base")
+surface_material_override/0 = SubResource("Material_base")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+shape = SubResource("SphereShape3D_col")
