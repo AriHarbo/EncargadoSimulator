@@ -375,9 +375,9 @@ tarea_a_completar = "tarea_01_presentaciones"
 
 [node name="npc_bartender" parent="." groups=["Interactable"] instance=ExtResource("17_aus5l")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.24704, 1, 3.34603)
-npc_name = "Bartender"
+npc_name = "Bartender (Pela)"
 npc_id = "npc_bartender"
-lineas_dialogo = ["hola, anashe", "chupala"]
+lineas_dialogo = ["Hola, vos debes ser el nuevo encargado.", "Mi nombre es Agustín, pero podes llamame El Pela", "Soy el bartender del hotel. Si en algún momento te supera el estrés, vení a hablar conmigo."]
 tarea_a_completar = "tarea_01_presentaciones"
 
 [node name="Shelf" parent="." instance=ExtResource("19_wmq3s")]

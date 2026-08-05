@@ -1,0 +1,72 @@
+[gd_scene load_steps=14 format=3 uid="uid://elevator_floor_door"]
+
+[ext_resource type="Script" path="res://src/scripts/elevator_floor_door.gd" id="1_efd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_door"]
+albedo_color = Color(0.402735, 0.222461, 9.62615e-08, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(1, 2, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door_col"]
+size = Vector3(1.09875, 1.07323, 1.13624)
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorMesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_open"]
+resource_name = "open"
+length = 0.6
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorMesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.6, 1, 1.05, 0, 0)
+
+[sub_resource type="Animation" id="Animation_close"]
+resource_name = "close"
+length = 0.6
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorMesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 1.05, 0, 0, 0.6, 1, 0, 0, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_efd"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"open": SubResource("Animation_open"),
+&"close": SubResource("Animation_close")
+}
+
+[node name="ElevatorFloorDoor" type="Node3D"]
+script = ExtResource("1_efd")
+floor_number = 0
+elevator_path = NodePath("")
+
+[node name="DoorMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_door")
+mesh = SubResource("BoxMesh_door")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="DoorMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorMesh/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_door_col")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_efd")
+}

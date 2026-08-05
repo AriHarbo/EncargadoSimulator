@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b2ot2ntp34wwj"]
+[gd_scene load_steps=20 format=3 uid="uid://b2ot2ntp34wwj"]
 
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/Player.tscn" id="1_jv0ip"]
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/mop.tscn" id="2_dyx80"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://boxhsbo1q1hpq" path="res://src/scenes/computer_shop.tscn" id="11_tmjf4"]
 [ext_resource type="PackedScene" uid="uid://c8xwpaq3wf3p6" path="res://src/scenes/shelf.tscn" id="12_mfwth"]
 [ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/shop_ui.tscn" id="12_shop"]
+[ext_resource type="PackedScene" path="res://src/scenes/elevator_floor_door.tscn" id="13_g70wg"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/dumpster.tscn" id="13_idtb6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_276cp"]
@@ -59,6 +60,24 @@ use_collision = true
 size = Vector3(14.3587, 0.864746, 17.4165)
 material = SubResource("StandardMaterial3D_276cp")
 
+[node name="floor2" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.166, 4.9, 0.051)
+use_collision = true
+size = Vector3(14.3587, 0.195251, 17.4165)
+material = SubResource("StandardMaterial3D_276cp")
+
+[node name="floor3" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.166, 9.9, 0.051)
+use_collision = true
+size = Vector3(14.3587, 0.195251, 17.4165)
+material = SubResource("StandardMaterial3D_276cp")
+
+[node name="floor4" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.166, 14.9, 0.051)
+use_collision = true
+size = Vector3(14.3587, 0.195251, 17.4165)
+material = SubResource("StandardMaterial3D_276cp")
+
 [node name="crouch_heigth 1" type="CSGBox3D" parent="Structure"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.12754, 0.866205, 0.839263)
 use_collision = true
@@ -98,6 +117,9 @@ shop_ui = NodePath("../../ShopUI")
 
 [node name="Shelf" parent="Structure" instance=ExtResource("12_mfwth")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19699, 0.97882, 6.62592)
+
+[node name="ElevatorFloorDoor" parent="Structure" instance=ExtResource("13_g70wg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.95347, 0.996094, 6.71692)
 
 [node name="ShopUI" parent="." instance=ExtResource("12_shop")]
 

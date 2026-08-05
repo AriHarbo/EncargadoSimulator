@@ -38,6 +38,10 @@ const CROUCH_COLLISION_HEIGHT := 0.7
 var is_crouching := false
 var crouch_cam_offset := 0.0
 
+# VARIABLES COYOTE JUMP
+const COYOTE_TIME := 0.12        # Segundos de gracia tras caer de una plataforma
+var coyote_timer := 0.0
+
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var capsule_shape: CapsuleShape3D = collision_shape.shape
 var normal_collision_height := 1.62
@@ -109,8 +113,14 @@ func _physics_process(delta: float) -> void:
 	if get_tree().get_first_node_in_group("minigame_active"):
 		interact_hint.visible = false
 		return
-	if not is_on_floor():
+
+	# Coyote jump: mantener el timer mientras estuvo en el suelo recientemente
+	if is_on_floor():
+		coyote_timer = COYOTE_TIME
+	else:
+		coyote_timer = max(coyote_timer - delta, 0.0)
 		velocity += get_gravity() * delta
+
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	_update_crouch(delta)
@@ -526,12 +536,23 @@ func movement(delta: float) -> void:
 	if Input.is_action_pressed("move_right"): input_dir += transform.basis.x
 
 	input_dir = input_dir.normalized()
-	var speed = SPEED * (CROUCH_SPEED_MULT if is_crouching else 1.0)
-	velocity.x = input_dir.x * speed
-	velocity.z = input_dir.z * speed
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if is_on_floor():
+		# En el suelo: aplicar velocidad directamente con el multiplicador de agacharse
+		var speed = SPEED * (CROUCH_SPEED_MULT if is_crouching else 1.0)
+		velocity.x = input_dir.x * speed
+		velocity.z = input_dir.z * speed
+	else:
+		# En el aire: ignorar el multiplicador de crouch para preservar la inercia del salto.
+		# Solo se aplica un control aéreo suave que no mata la velocidad horizontal.
+		var air_speed = SPEED
+		var air_control := 6.0
+		velocity.x = lerp(velocity.x, input_dir.x * air_speed, air_control * delta)
+		velocity.z = lerp(velocity.z, input_dir.z * air_speed, air_control * delta)
+
+	if Input.is_action_just_pressed("jump") and coyote_timer > 0.0:
 		velocity.y = JUMP_VELOCITY
+		coyote_timer = 0.0  # Consumir el coyote time para no poder saltar dos veces
 
 # ─── AGACHARSE ─────────────────────────────────────────────────────────────────
 
