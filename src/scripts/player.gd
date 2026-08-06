@@ -5,7 +5,7 @@ const JUMP_VELOCITY = 4.5
 const CAMERA_TRANSITION_TIME := 0.6
 var sens := 0.1
 var rotation_x := 0.0
-
+	
 @onready var raycast = $Camera3D/RayCast3D
 @onready var cam = $Camera3D
 @onready var grab_point = $Camera3D/GrabPoint
@@ -24,9 +24,9 @@ var rotation_x := 0.0
 # VARIABLES PARA AGARRE DE OBJETOS
 var grabbed_object: RigidBody3D = null
 var grab_distance: float = 3.0
-
 # VARIABLES ÍTEM EQUIPADO ACTIVO
 var equipped_item: RigidBody3D = null   # el nodo físico en HandPosition
+var held_box: RigidBody3D = null
 var equipped_type: String = ""          # "broom", "mop", o ""
 
 # VARIABLES COOLDOWN USO
@@ -78,6 +78,8 @@ var _blend_camera: Camera3D = null
 var _blend_tween: Tween = null
 
 signal broom_sweep
+
+@onready var order_box_marker = $Camera3D/OrderBoxMarker
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -226,7 +228,7 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			if equipped_item and not tool_on_cooldown:
 				_use_equipped_tool()
-			elif not equipped_item:
+			elif not equipped_item and not held_box:
 				_try_grab_trash()
 		else:
 			_release_grabbed_object()
@@ -337,12 +339,17 @@ func equip_item(tool_node, type: String) -> void:
 	_attach_to_hand(tool_node, type)
 
 func _attach_to_hand(tool_node: RigidBody3D, type: String) -> void:
+	if held_box:
+		drop_held_box()
+	
 	equipped_item = tool_node
 	equipped_type = type
 
 	tool_node.freeze = true
 	tool_node.set_collision_layer_value(1, false)
 	tool_node.set_collision_mask_value(1, false)
+
+	var target_marker = order_box_marker if type == "order_box" else hand_position
 	tool_node.reparent(hand_position)
 	tool_node.transform = Transform3D.IDENTITY
 	tool_node.visible = true
@@ -363,9 +370,45 @@ func _detach_from_hand() -> void:
 	equipped_item = null
 	equipped_type = ""
 
+func pick_up_box(box: RigidBody3D) -> void:
+	if held_box:
+		return
+	if equipped_item:
+		_detach_from_hand()   # no tener herramienta + caja al mismo tiempo
+
+	held_box = box
+	box.freeze = true
+	box.set_collision_layer_value(1, false)
+	box.set_collision_mask_value(1, false)
+	box.reparent(order_box_marker)
+	box.transform = Transform3D.IDENTITY
+	box.visible = true
+
+func drop_held_box(consumed: bool = false) -> void:
+	if not held_box:
+		return
+	var box = held_box
+	held_box = null
+
+	if consumed:
+		box.queue_free()
+		return
+
+	box.reparent(get_tree().current_scene)
+	var drop_offset = -cam.global_transform.basis.z * 1.2 + Vector3(0, 0.3, 0)
+	box.global_transform.origin = cam.global_transform.origin + drop_offset
+	box.freeze = false
+	box.visible = true
+	box.set_collision_layer_value(1, true)
+	box.set_collision_mask_value(1, true)
+	box.apply_central_impulse(-cam.global_transform.basis.z * 2.0)
+
 # ─── DROP HERRAMIENTA ─────────────────────────────────────────────────────────
 
 func drop_current_tool() -> void:
+	if held_box and not equipped_item:
+		drop_held_box()
+		return
 	if not equipped_item:
 		hotbar.remove_item_from_slot(hotbar.selected_slot)
 		return
@@ -815,3 +858,14 @@ func take_equipped_item() -> RigidBody3D:
 	equipped_type = ""
 	hotbar.remove_item_from_slot(slot)
 	return item
+
+func discard_equipped_item() -> void:
+	if not equipped_item:
+		return
+	var item = equipped_item
+	var slot = hotbar.selected_slot
+	equipped_item = null
+	equipped_type = ""
+	bag_fill_bar.hide_bar()
+	hotbar.remove_item_from_slot(slot)
+	item.queue_free()

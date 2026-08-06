@@ -40,6 +40,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, -2)
 [node name="HandPosition" type="Node3D" parent="Camera3D"]
 transform = Transform3D(0.936629, 0.330553, -0.116017, 0, -0.331173, -0.943569, -0.350322, 0.883775, -0.310187, 0.294453, -0.250217, -0.854142)
 
+[node name="OrderBoxMarker" type="Marker3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, -0.9)
+
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
@@ -102,9 +105,7 @@ horizontal_alignment = 1
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
-anchor_top = 0.0
 anchor_right = 1.0
-anchor_bottom = 0.0
 offset_left = -120.0
 offset_top = 10.0
 offset_right = -10.0
@@ -112,8 +113,8 @@ offset_bottom = 40.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 24
 text = "$0"

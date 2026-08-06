@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://caciteqcaqb8p"]
+
+[ext_resource type="Script" uid="uid://wk2lsu8mp33c" path="res://src/scripts/order_box.gd" id="1_rjwpe"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2nqqk"]
+size = Vector3(0.5, 0.5, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2nqqk"]
+albedo_color = Color(0.956373, 0.72503, 0.405263, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rjwpe"]
+size = Vector3(0.5, 0.5, 0.6)
+
+[node name="OrderBox" type="RigidBody3D"]
+collision_layer = 3
+script = ExtResource("1_rjwpe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2nqqk")
+surface_material_override/0 = SubResource("StandardMaterial3D_2nqqk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_rjwpe")

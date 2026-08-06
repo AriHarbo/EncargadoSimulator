@@ -1,22 +1,24 @@
 extends CanvasLayer
 
 @export var bag_price := 20
+const ORDER_BOX_SCENE = preload("res://src/scenes/order_box.tscn")
+@export var order_spawn_point: NodePath
+@export var order_delay: float = 4.0
+const BAG_ORDER_QUANTITY := 10
 
 @onready var panel = $Panel
 @onready var money_label = $Panel/VBoxContainer/MoneyLabel
 @onready var price_label = $Panel/VBoxContainer/PriceLabel
 @onready var buy_button = $Panel/VBoxContainer/BuyButton
 
-const TRASH_BAG_SCENE = preload("res://src/scenes/trash_bag.tscn")
-
 var _abierto := false
-
+@onready var spawn_point: Node3D = get_node(order_spawn_point)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	panel.hide()
 	buy_button.pressed.connect(_on_buy_pressed)
-	price_label.text = "Trash bag: $%d" % bag_price
+	price_label.text = "Bolsas de basura x10: $%d" % bag_price
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -53,18 +55,27 @@ func _on_buy_pressed() -> void:
 	if not player:
 		return
 
+	if not OrderManager.can_order():
+		money_label.text = "Ya tenés un pedido en camino"
+		return
+
 	if player.money < bag_price:
 		money_label.text = "Not enough money"
 		return
 
-	var new_bag = TRASH_BAG_SCENE.instantiate()
-	get_tree().current_scene.add_child(new_bag)
-	new_bag.global_transform.origin = player.global_transform.origin
-
-	if not player.give_item(new_bag, "trash_bag"):
-		new_bag.queue_free()
-		money_label.text = "Inventory full"
+	if not player.spend_money(bag_price):
+		money_label.text = "Not enough money"
 		return
 
-	player.spend_money(bag_price)
-	money_label.text = "Bought! Money: $%d" % player.money
+	OrderManager.start_order()
+	money_label.text = "Pedido en camino... $%d" % player.money
+
+	await get_tree().create_timer(order_delay).timeout
+
+	var box = ORDER_BOX_SCENE.instantiate()
+	get_tree().current_scene.add_child(box)
+	box.global_transform.origin = spawn_point.global_transform.origin
+	box.setup("trash_bag", BAG_ORDER_QUANTITY)
+	OrderManager.current_box = box
+
+	money_label.text = "¡Tu caja llegó! Andá a buscarla"
