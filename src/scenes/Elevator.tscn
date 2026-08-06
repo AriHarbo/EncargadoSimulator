@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bt02n2pltoch5"]
+[gd_scene load_steps=14 format=3 uid="uid://bt02n2pltoch5"]
 
 [ext_resource type="PackedScene" uid="uid://dbln36dnvapxe" path="res://src/scenes/elevator_button.tscn" id="1_0nmn3"]
 [ext_resource type="Script" uid="uid://cbhq2xwd2iqqw" path="res://src/scripts/elevator.gd" id="1_b2x45"]
+[ext_resource type="AudioStream" uid="uid://d0bbecjkelekx" path="res://sounds/elevator_music.wav" id="3_6ycfg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yrkqt"]
 
@@ -49,6 +50,11 @@ script = ExtResource("1_b2x45")
 
 [node name="ElevatorPlatform" type="StaticBody3D" parent="."]
 
+[node name="OmniLight3D" type="OmniLight3D" parent="ElevatorPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3611, 0)
+omni_range = 3.564
+omni_attenuation = -0.35
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ElevatorPlatform"]
 transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
 shape = SubResource("BoxShape3D_yrkqt")
@@ -92,7 +98,7 @@ floor_number = 3
 elevator_path = NodePath("../../../..")
 
 [node name="door" type="MeshInstance3D" parent="ElevatorPlatform/ElevatorMesh"]
-transform = Transform3D(1, 0, 0, 0, 18.9528, 0, 0, 0, 0.0371017, -0.954964, 9.82658, 0.479165)
+transform = Transform3D(1, 0, 0, 0, 18.95, 0, 0, 0, 0.037, -0.954964, 9.82658, 0.479165)
 mesh = SubResource("BoxMesh_b2x45")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ElevatorPlatform/ElevatorMesh/door"]
@@ -105,8 +111,36 @@ libraries = {
 &"": SubResource("AnimationLibrary_6ycfg")
 }
 
+[node name="ElevatorSound" type="AudioStreamPlayer3D" parent="ElevatorPlatform"]
+stream = ExtResource("3_6ycfg")
+volume_db = -41.048
+max_db = -3.857
+max_distance = 20.0
+
 [node name="ElevatorArea" type="Area3D" parent="ElevatorPlatform"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ElevatorPlatform/ElevatorArea"]
 transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0.773869, -0.000366211)
 shape = SubResource("BoxShape3D_0nmn3")
+
+[node name="build" type="Node3D" parent="ElevatorPlatform"]
+
+[node name="left_panel" type="CSGBox3D" parent="ElevatorPlatform/build"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.961527, 0.944788, -0.0593948)
+use_collision = true
+size = Vector3(0.082043, 1.78809, 2.87477)
+
+[node name="right_panel" type="CSGBox3D" parent="ElevatorPlatform/build"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.954108, 0.944788, -0.0593948)
+use_collision = true
+size = Vector3(0.082043, 1.78809, 2.87477)
+
+[node name="back_panel" type="CSGBox3D" parent="ElevatorPlatform/build"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010437, 0.94106, -1.45075)
+use_collision = true
+size = Vector3(1.83923, 1.79248, 0.0952148)
+
+[node name="ceiling" type="CSGBox3D" parent="ElevatorPlatform/build"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0168457, 1.85358, -0.0123148)
+use_collision = true
+size = Vector3(1.88428, 0.134521, 2.78113)

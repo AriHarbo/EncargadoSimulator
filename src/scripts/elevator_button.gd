@@ -7,10 +7,10 @@ extends Interactable
 @export var button_color: Color = Color.RED
 
 # Referencias a nodos
-@onready var elevator = get_node_or_null(elevator_path)
-@onready var button_mesh = $ButtonMesh
-@onready var button_light = $ButtonLight
-@onready var button_label = $ButtonLabel
+@onready var elevator      = get_node_or_null(elevator_path)
+@onready var button_mesh   = $ButtonMesh
+@onready var button_light  = $ButtonLight
+@onready var button_label  = $ButtonLabel
 
 # Variables de estado
 var is_pressed: bool = false
@@ -18,21 +18,35 @@ var is_pressed: bool = false
 func _ready():
 	# Configurar tipo para sistema de interacción
 	type = "ElevatorButton"
-	
+
 	# Configurar etiqueta con número de piso
 	button_label.text = str(floor_number)
-	
+
 	# Configurar color del botón
 	if button_mesh.get_surface_override_material(0):
 		button_mesh.get_surface_override_material(0).albedo_color = button_color
-	
+
 	# Asegurarnos que el botón esté conectado a un ascensor
 	if elevator_path.is_empty() or !elevator:
-		push_warning("ElevatorButton en no tiene un ascensor asignado!")
+		push_warning("ElevatorButton no tiene un ascensor asignado!")
+		return
+
+	# Conectar señales del ascensor para apagar el botón al llegar
+	if elevator.has_signal("floor_reached"):
+		elevator.floor_reached.connect(_on_elevator_floor_reached)
+
+	# Si el ascensor ya está en este piso (inicio), asegurar que el botón esté apagado
+	_update_light_state()
 
 # Sobrescribir el método action_use de la clase Interactable
 func action_use():
-	if !is_pressed and elevator:
+	# No permitir presionar si ya está en la cola o si el ascensor ya está aquí parado
+	if is_pressed:
+		return false
+	if elevator and elevator.current_floor == floor_number and !elevator.is_moving:
+		return false
+
+	if elevator:
 		_press_button()
 		return true
 	return false
@@ -40,33 +54,31 @@ func action_use():
 func _press_button():
 	# Marcar botón como presionado
 	is_pressed = true
-	
-	# Animación visual de presionado
+
+	# Animación visual: hundir el botón momentáneamente
 	var original_position = button_mesh.position
-	button_mesh.position.z -= 0.03  # Hundir el botón
-	button_light.light_energy = 2.0  # Iluminar el botón
-	
-	# Reproducir sonido (opcional)
+	button_mesh.position.z -= 0.03
+	button_light.light_energy = 1.0  # Iluminar fuerte al presionar
+
+	# Reproducir sonido del botón si existe
 	if has_node("ButtonSound"):
 		$ButtonSound.play()
-	
-	# Llamar al ascensor
-	elevator.call_elevator(floor_number)
-	
-	# Restaurar botón después de un corto tiempo
-	await get_tree().create_timer(0.3).timeout
-	button_mesh.position = original_position
-	
-	# Mantener la luz encendida hasta que el ascensor llegue
-	if elevator.has_signal("floor_reached"):
-		elevator.floor_reached.connect(_on_elevator_floor_reached)
 
-func _on_elevator_floor_reached(arrived_floor):
+	# Solicitar el piso al ascensor (agrega a la cola, no reemplaza)
+	elevator.request_floor(floor_number)
+
+	# Restaurar posición del botón después de la animación de pulsación
+	await get_tree().create_timer(0.15).timeout
+	button_mesh.position = original_position
+
+func _on_elevator_floor_reached(arrived_floor: int):
 	if arrived_floor == floor_number:
-		# Apagar luz cuando el ascensor llegue a este piso
-		button_light.light_energy = 0.2
+		# Apagar luz y desmarcar como presionado
 		is_pressed = false
-		
-		# Desconectar señal para evitar acumulación de conexiones
-		if elevator.floor_reached.is_connected(_on_elevator_floor_reached):
-			elevator.floor_reached.disconnect(_on_elevator_floor_reached)
+		_update_light_state()
+
+func _update_light_state():
+	if is_pressed:
+		button_light.light_energy = 1.0
+	else:
+		button_light.light_energy = 0.01  # Luz mínima apagada
