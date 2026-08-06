@@ -1,0 +1,397 @@
+[gd_scene load_steps=36 format=3 uid="uid://d15olcwlgxrr5"]
+
+[ext_resource type="Script" uid="uid://4ex4c3ww6cf0" path="res://src/scripts/fields/mapa.gd" id="1_27sbm"]
+[ext_resource type="Script" uid="uid://b7npfdi0w2s8y" path="res://src/scripts/ui/task_board.gd" id="2_1abq6"]
+[ext_resource type="PackedScene" uid="uid://crnaf7io0rxdo" path="res://src/scenes/enviroment/door.tscn" id="3_npwac"]
+[ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/player/Player.tscn" id="4_7d73j"]
+[ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/enviroment/dumpster.tscn" id="5_q5j15"]
+[ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/tools/mop.tscn" id="6_4et7d"]
+[ext_resource type="PackedScene" uid="uid://dip35k3r165k6" path="res://src/scenes/tools/broom.tscn" id="7_8s78a"]
+[ext_resource type="PackedScene" uid="uid://cbh376h7jfa2y" path="res://src/scenes/tools/bucket.tscn" id="8_3h7hg"]
+[ext_resource type="PackedScene" uid="uid://bmamutli16np2" path="res://src/scenes/ui/dialogo_ui.tscn" id="9_3g5aw"]
+[ext_resource type="PackedScene" uid="uid://k3jtsesbh2e0" path="res://src/scenes/ui/task_board_ui.tscn" id="10_uivrl"]
+[ext_resource type="PackedScene" uid="uid://ddvxrmpmuh6su" path="res://src/scenes/ui/incoming_call.tscn" id="11_e8nsa"]
+[ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/ui/shop_ui.tscn" id="12_m6f5u"]
+[ext_resource type="PackedScene" uid="uid://bm37wbyvd2umg" path="res://src/scenes/props/trash.tscn" id="13_23hao"]
+[ext_resource type="PackedScene" uid="uid://df0m7nve7e350" path="res://src/scenes/cleanables/blood_stain.tscn" id="14_t3itu"]
+[ext_resource type="PackedScene" uid="uid://rjj1junjy0u8" path="res://src/scenes/cleanables/dirtiness.tscn" id="15_c8vgm"]
+[ext_resource type="PackedScene" uid="uid://ucn50j0d1ct" path="res://src/scenes/props/trash_item.tscn" id="16_ruhnn"]
+[ext_resource type="PackedScene" uid="uid://ddmfvgvvxmshr" path="res://src/scenes/enviroment/bag_dispenser.tscn" id="17_5tw0b"]
+[ext_resource type="PackedScene" uid="uid://ltpr2kkubd8d" path="res://src/scenes/npcs/npc.tscn" id="18_mk1c0"]
+[ext_resource type="PackedScene" uid="uid://c8xwpaq3wf3p6" path="res://src/scenes/enviroment/shelf.tscn" id="19_vohra"]
+[ext_resource type="PackedScene" uid="uid://x0518latqxdb" path="res://src/scenes/props/bombilla.tscn" id="20_yaa0w"]
+[ext_resource type="PackedScene" uid="uid://boxhsbo1q1hpq" path="res://src/scenes/enviroment/computer_shop.tscn" id="21_c1s7g"]
+[ext_resource type="PackedScene" uid="uid://cvuqbhco1rki3" path="res://src/scenes/enviroment/socket_bombilla.tscn" id="22_xweq8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohegu"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmq3s"]
+albedo_color = Color(0.419608, 0.117647, 0.137255, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3mu0"]
+albedo_color = Color(0.239216, 0.168627, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aus5l"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cu83j"]
+albedo_color = Color(0.776742, 0.889815, 0.951015, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vfd3t"]
+material = SubResource("StandardMaterial3D_cu83j")
+size = Vector2(0.4, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_608hb"]
+size = Vector3(0.4, 0.6, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_codxj"]
+albedo_color = Color(0.909804, 0.862745, 0.784314, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k0oyl"]
+albedo_color = Color(0.996078, 0.945098, 0.941176, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1hk0g"]
+albedo_color = Color(0.419608, 0.117647, 0.137255, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rdlyd"]
+
+[sub_resource type="Sky" id="Sky_t2iwe"]
+sky_material = SubResource("ProceduralSkyMaterial_rdlyd")
+
+[sub_resource type="Environment" id="Environment_csrmo"]
+background_mode = 2
+sky = SubResource("Sky_t2iwe")
+
+[node name="Mapa" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0940455, 0.105144, 0.17166)
+script = ExtResource("1_27sbm")
+
+[node name="Building" type="Node3D" parent="."]
+
+[node name="Piso_Lobby" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(20, 0.2, 20)
+material = SubResource("StandardMaterial3D_ohegu")
+
+[node name="Pared_Norte" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -10)
+use_collision = true
+size = Vector3(20, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Sur" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
+use_collision = true
+size = Vector3(20, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Top" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 0)
+use_collision = true
+size = Vector3(0.2, 1, 20)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Der" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 5.75)
+use_collision = true
+size = Vector3(0.2, 3, 8.5)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Izq" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0098, 1.52184, -5.73698)
+use_collision = true
+size = Vector3(0.2, 3, 8.5)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Oeste" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
+use_collision = true
+size = Vector3(0.2, 3, 20)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Techo_lobby" type="CSGBox3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+use_collision = true
+size = Vector3(20, 0.2, 20)
+material = SubResource("StandardMaterial3D_r3mu0")
+
+[node name="Cuarto_conserje" type="Node3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+
+[node name="Piso_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.1, -3.5)
+use_collision = true
+size = Vector3(4, 0.2, 5)
+material = SubResource("StandardMaterial3D_aus5l")
+
+[node name="Techo_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, -3.5)
+use_collision = true
+size = Vector3(4, 0.2, 5)
+material = SubResource("StandardMaterial3D_r3mu0")
+
+[node name="Pared_Norte_Conserje" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -6)
+use_collision = true
+size = Vector3(4, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Top" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -3.5)
+use_collision = true
+size = Vector3(0.2, 1, 5)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Izq" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -5.25)
+use_collision = true
+size = Vector3(0.2, 3, 1.5)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Der" type="CSGBox3D" parent="Building/Cuarto_conserje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -1.75)
+use_collision = true
+size = Vector3(0.2, 3, 1.5)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="TaskBoard" type="Node3D" parent="Building/Cuarto_conserje" node_paths=PackedStringArray("task_board_ui") groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.13713, 1.40682, -5.9506)
+script = ExtResource("2_1abq6")
+task_board_ui = NodePath("../../../TaskBoardUI")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Building/Cuarto_conserje/TaskBoard"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -3.14908, -2.45633e-09, 0.0561943)
+mesh = SubResource("PlaneMesh_vfd3t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Building/Cuarto_conserje/TaskBoard" groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000555992, 0.0304792, -0.021502)
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Building/Cuarto_conserje/TaskBoard/StaticBody3D" groups=["Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.14982, -0.0299054, 0.0620227)
+shape = SubResource("BoxShape3D_608hb")
+
+[node name="Pasillo" type="Node3D" parent="Building"]
+
+[node name="Piso_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.1, 0)
+use_collision = true
+size = Vector3(12, 0.2, 3)
+material = SubResource("StandardMaterial3D_codxj")
+
+[node name="Techo_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3, 0)
+use_collision = true
+size = Vector3(12, 0.2, 3)
+material = SubResource("StandardMaterial3D_r3mu0")
+
+[node name="Pared_Sur_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, 1.5)
+use_collision = true
+size = Vector3(12, 3, 0.2)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Pared_Este_Pasillo" type="CSGBox3D" parent="Building/Pasillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.5, 0)
+use_collision = true
+size = Vector3(0.2, 3, 3)
+material = SubResource("StandardMaterial3D_wmq3s")
+
+[node name="Habitacion_1" type="Node3D" parent="Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Piso_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_k0oyl")
+
+[node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_r3mu0")
+
+[node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
+use_collision = true
+size = Vector3(6, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
+use_collision = true
+size = Vector3(6, 1, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
+use_collision = true
+size = Vector3(2.01709, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
+use_collision = true
+size = Vector3(3.5204, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="interact_door" parent="Building/Habitacion_1" instance=ExtResource("3_npwac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
+
+[node name="Habitacion_2" type="Node3D" parent="Building"]
+
+[node name="Piso_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -0.1, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_k0oyl")
+
+[node name="Techo_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, -5.5)
+use_collision = true
+size = Vector3(6, 0.2, 8)
+material = SubResource("StandardMaterial3D_r3mu0")
+
+[node name="Pared_Norte_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -9.5)
+use_collision = true
+size = Vector3(6, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Este_Hab1" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.5, -5.5)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Top" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -1.5)
+use_collision = true
+size = Vector3(6, 1, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Der" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4915, 1.5078, -1.49989)
+use_collision = true
+size = Vector3(2.01709, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="Pared_Sur_Hab1_Izq" type="CSGBox3D" parent="Building/Habitacion_2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7102, 1.5, -1.5)
+use_collision = true
+size = Vector3(3.5204, 3, 0.2)
+material = SubResource("StandardMaterial3D_1hk0g")
+
+[node name="interact_door" parent="Building/Habitacion_2" instance=ExtResource("3_npwac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4769, 1, -1.50063)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_csrmo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.150157, 0.988662, 0, -0.988662, -0.150157, 0, 0, 0)
+
+[node name="Player" parent="." instance=ExtResource("4_7d73j")]
+transform = Transform3D(-0.0235075, 0, -0.999724, 0, 1, 0, 0.999724, 0, -0.0235075, -8.20688, 0.998286, 7.60503)
+
+[node name="dumpster" parent="." instance=ExtResource("5_q5j15")]
+transform = Transform3D(1.1107, 0, -0.114584, 0, 1, 0, 0.104992, 0, 1.21217, 7.18109, 0.0349569, -4.52253)
+
+[node name="Mop" parent="." instance=ExtResource("6_4et7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.91659, 0.180644, 9.12579)
+
+[node name="Broom" parent="." instance=ExtResource("7_8s78a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.55169, 0.66406, 9.10771)
+
+[node name="Bucket" parent="." groups=["bucket"] instance=ExtResource("8_3h7hg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.92457, 0.233759, 9.25912)
+
+[node name="DialogoUI" parent="." instance=ExtResource("9_3g5aw")]
+
+[node name="TaskBoardUI" parent="." instance=ExtResource("10_uivrl")]
+
+[node name="IncomingCall" parent="." instance=ExtResource("11_e8nsa")]
+ring_sound = null
+
+[node name="ShopUI" parent="." instance=ExtResource("12_m6f5u")]
+order_spawn_point = NodePath("../OrderSpawnPoint")
+
+[node name="Trash" parent="." instance=ExtResource("13_23hao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.64269, 0.471683, 2.94865)
+
+[node name="BloodStain" parent="." instance=ExtResource("14_t3itu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.3779, 0.00978901, -3.85242)
+
+[node name="dirtiness" parent="." instance=ExtResource("15_c8vgm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4109, 0.0420286, -4.3556)
+
+[node name="TrashItem" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.94106, 0.5, -4.44151)
+trash_type = 1
+
+[node name="TrashItem2" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.57221, 0.5, -4.19243)
+
+[node name="TrashItem3" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.74743, 0.698959, -6.57759)
+
+[node name="TrashItem4" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.52266, 0.5, -6.53933)
+
+[node name="TrashItem5" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58318, 0.5, -4.29192)
+
+[node name="TrashItem6" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.64555, 0.5, -5.34879)
+
+[node name="TrashItem7" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.728, 1.5, -6.04472)
+
+[node name="TrashItem8" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01448, 1.5, -4.54565)
+
+[node name="TrashItem9" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4895, 0.5, -2.26618)
+
+[node name="TrashItem10" parent="." instance=ExtResource("16_ruhnn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.13242, 0.5, -2.26618)
+
+[node name="BagDispenser" parent="." instance=ExtResource("17_5tw0b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.08631, 1.27052, 9.6941)
+
+[node name="npc_recepcionista" parent="." groups=["Interactable"] instance=ExtResource("18_mk1c0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.51294, 1, -1.04478)
+npc_name = "Recepcionista"
+npc_id = "npc_recepcionista"
+tarea_a_completar = "tarea_01_presentaciones"
+
+[node name="npc_bartender" parent="." groups=["Interactable"] instance=ExtResource("18_mk1c0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.24704, 1, 3.34603)
+npc_name = "Bartender (Pela)"
+npc_id = "npc_bartender"
+tarea_a_completar = "tarea_01_presentaciones"
+
+[node name="Shelf" parent="." instance=ExtResource("19_vohra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.89167, 0.566077, 5.43134)
+
+[node name="Bombilla" parent="." instance=ExtResource("20_yaa0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.21251, 0.08, 5.6252)
+
+[node name="ComputerShop" parent="." node_paths=PackedStringArray("shop_ui") instance=ExtResource("21_c1s7g")]
+transform = Transform3D(-0.00719069, 0, 0.999974, 0, 1, 0, -0.999974, 0, -0.00719069, -9.50543, 0.0300001, 7.37938)
+shop_ui = NodePath("../ShopUI")
+
+[node name="OrderSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.39518, 0.470059, 8.24319)
+
+[node name="SocketBombilla" parent="." instance=ExtResource("22_xweq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.189213, 2.82164, 0.899999)

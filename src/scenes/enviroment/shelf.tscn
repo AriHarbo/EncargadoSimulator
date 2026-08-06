@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8xwpaq3wf3p6"]
+
+[ext_resource type="Script" uid="uid://jprkiplua1v3" path="res://src/scripts/enviroment/shelf_slot.gd" id="1_vr80o"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gs4pl"]
+size = Vector3(1.2, 0.05, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr80o"]
+albedo_color = Color(0.30389, 0.190554, 0.088321, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jdrml"]
+size = Vector3(1.2, 0.05, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gnx7p"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="Shelf" type="Node3D"]
+
+[node name="ShelfBody" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ShelfBody"]
+mesh = SubResource("BoxMesh_gs4pl")
+surface_material_override/0 = SubResource("StandardMaterial3D_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShelfBody"]
+shape = SubResource("BoxShape3D_jdrml")
+
+[node name="Slot1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.492721, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot1"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot1"]
+
+[node name="Slot2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0973748, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot2"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot2"]
+
+[node name="Slot3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104561, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot3"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot3"]
+
+[node name="Slot4" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.296001, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot4"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot4"]
+
+[node name="Slot5" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30701, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot5"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot5"]
+
+[node name="Slot6" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.505981, 0.05, 0)
+collision_layer = 2
+script = ExtResource("1_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Slot6"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="Slot6"]
