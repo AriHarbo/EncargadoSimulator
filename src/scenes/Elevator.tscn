@@ -50,6 +50,11 @@ script = ExtResource("1_b2x45")
 
 [node name="ElevatorPlatform" type="StaticBody3D" parent="."]
 
+[node name="OmniLight3D" type="OmniLight3D" parent="ElevatorPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3611, 0)
+omni_range = 3.564
+omni_attenuation = -0.35
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ElevatorPlatform"]
 transform = Transform3D(2, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 0)
 shape = SubResource("BoxShape3D_yrkqt")
@@ -93,7 +98,7 @@ floor_number = 3
 elevator_path = NodePath("../../../..")
 
 [node name="door" type="MeshInstance3D" parent="ElevatorPlatform/ElevatorMesh"]
-transform = Transform3D(1, 0, 0, 0, 18.9528, 0, 0, 0, 0.0371017, -0.954964, 9.82658, 0.479165)
+transform = Transform3D(1, 0, 0, 0, 18.95, 0, 0, 0, 0.037, -0.954964, 9.82658, 0.479165)
 mesh = SubResource("BoxMesh_b2x45")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ElevatorPlatform/ElevatorMesh/door"]
@@ -139,8 +144,3 @@ size = Vector3(1.83923, 1.79248, 0.0952148)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0168457, 1.85358, -0.0123148)
 use_collision = true
 size = Vector3(1.88428, 0.134521, 2.78113)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.71569, 0)
-omni_range = 3.564
-omni_attenuation = -0.35

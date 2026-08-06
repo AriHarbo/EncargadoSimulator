@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://boxhsbo1q1hpq" path="res://src/scenes/computer_shop.tscn" id="11_tmjf4"]
 [ext_resource type="PackedScene" uid="uid://c8xwpaq3wf3p6" path="res://src/scenes/shelf.tscn" id="12_mfwth"]
 [ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/shop_ui.tscn" id="12_shop"]
-[ext_resource type="PackedScene" path="res://src/scenes/elevator_floor_door.tscn" id="13_g70wg"]
+[ext_resource type="PackedScene" uid="uid://blk4mkorve8vn" path="res://src/scenes/elevator_floor_door.tscn" id="13_g70wg"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/dumpster.tscn" id="13_idtb6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_276cp"]
@@ -119,7 +119,23 @@ shop_ui = NodePath("../../ShopUI")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19699, 0.97882, 6.62592)
 
 [node name="ElevatorFloorDoor" parent="Structure" instance=ExtResource("13_g70wg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.95347, 0.996094, 6.71692)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 5.99, 0.941, 6.3)
+elevator_path = NodePath("../Elevator")
+
+[node name="ElevatorFloorDoor2" parent="Structure" instance=ExtResource("13_g70wg")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 5.99, 5.9, 6.3)
+floor_number = 1
+elevator_path = NodePath("../Elevator")
+
+[node name="ElevatorFloorDoor3" parent="Structure" instance=ExtResource("13_g70wg")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 5.99, 10.9, 6.3)
+floor_number = 2
+elevator_path = NodePath("../Elevator")
+
+[node name="ElevatorFloorDoor4" parent="Structure" instance=ExtResource("13_g70wg")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 5.99, 15.9, 6.3)
+floor_number = 3
+elevator_path = NodePath("../Elevator")
 
 [node name="ShopUI" parent="." instance=ExtResource("12_shop")]
 
