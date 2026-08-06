@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddmfvgvvxmshr"]
+
+[ext_resource type="Script" uid="uid://b1n7nu42gp2ia" path="res://src/scripts/enviroment/bag_dispenser.gd" id="1_r7tcf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_oity0"]
+size = Vector3(0.4, 0.5, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r7tcf"]
+albedo_color = Color(0.821109, 1, 0.856874, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jx8mm"]
+size = Vector3(0.4, 0.5, 0.4)
+
+[node name="BagDispenser" type="StaticBody3D" groups=["Interactable"]]
+collision_layer = 2
+script = ExtResource("1_r7tcf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_oity0")
+surface_material_override/0 = SubResource("StandardMaterial3D_r7tcf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_jx8mm")
+
+[node name="StockLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.587631, 0)
+billboard = 1

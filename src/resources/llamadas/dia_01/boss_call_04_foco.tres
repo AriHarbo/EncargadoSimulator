@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BossCall" load_steps=2 format=3 uid="uid://clunfij3fqnj5"]
 
-[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/boss_call.gd" id="1_wsky5"]
+[ext_resource type="Script" uid="uid://dr75lfpgikn3s" path="res://src/scripts/resources/boss_call.gd" id="1_wsky5"]
 
 [resource]
 script = ExtResource("1_wsky5")
