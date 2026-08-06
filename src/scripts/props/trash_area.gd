@@ -1,6 +1,6 @@
 extends Area3D
 
-var trash_item = preload("res://src/scenes/trash_item.tscn")
+var trash_item = preload("res://src/scenes/props/trash_item.tscn")
 
 func _ready() -> void:
 	var cantidad_basuras = randi_range(1, 8)

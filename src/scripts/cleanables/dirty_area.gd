@@ -1,8 +1,8 @@
 extends Area3D
 
-var dirtiness_scene = preload("res://src/scenes/dirtiness.tscn")
-var blood_scene = preload("res://src/scenes/blood_stain.tscn")
-var trash_area_scene = preload("res://src/scenes/trash_area.tscn")  
+var dirtiness_scene = preload("res://src/scenes/cleanables/dirtiness.tscn")
+var blood_scene = preload("res://src/scenes/cleanables/blood_stain.tscn")
+var trash_area_scene = preload("res://src/scenes/props/trash_area.tscn")  
 
 func _ready() -> void:
 	var cantidad_dirt = randi_range(1, 10)
