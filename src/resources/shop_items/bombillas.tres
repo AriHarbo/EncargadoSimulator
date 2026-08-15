@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ShopItem" load_steps=2 format=3 uid="uid://no0l1tud2yx4"]
+
+[ext_resource type="Script" uid="uid://d3qjkygdb5q57" path="res://src/scripts/resources/shop_item.gd" id="1_m3jg4"]
+
+[resource]
+script = ExtResource("1_m3jg4")
+nombre = "Bombillas de luz"
+item_type = "bulb"
+precio = 50
+cantidad = 4
+metadata/_custom_type_script = "uid://d3qjkygdb5q57"

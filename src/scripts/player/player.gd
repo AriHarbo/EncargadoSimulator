@@ -26,7 +26,6 @@ var grabbed_object: RigidBody3D = null
 var grab_distance: float = 3.0
 # VARIABLES ÍTEM EQUIPADO ACTIVO
 var equipped_item: RigidBody3D = null   # el nodo físico en HandPosition
-var held_box: RigidBody3D = null
 var equipped_type: String = ""          # "broom", "mop", o ""
 
 # VARIABLES COOLDOWN USO
@@ -81,6 +80,14 @@ var showing_message := false
 var _blend_camera: Camera3D = null
 var _blend_tween: Tween = null
 
+# VARIABLES PARA MANEJAR CAJA DE PEDIDOS
+var held_box: RigidBody3D = null
+const BOX_HOLD_TIME: float = 0.5
+var box_hold_target: Node3D = null
+var box_hold_timer: float = 0.0
+var box_picked_this_hold: bool = false
+var _interact_action_consumed := false
+
 signal broom_sweep
 
 @onready var order_box_marker = $Camera3D/OrderBoxMarker
@@ -133,6 +140,7 @@ func _physics_process(delta: float) -> void:
 	_update_interact_hint()
 	_update_bucket_preview()
 	_handle_bucket_hold(delta)
+	_handle_box_hold(delta)
 
 # ─── GRAB ──────────────────────────────────────────────────────────────────────
 
@@ -187,29 +195,33 @@ func _input(event: InputEvent) -> void:
 	
 	# E → intentar recoger herramienta o interactuar
 	if Input.is_action_just_pressed("interact"):
-		# — Recoger herramientas del piso —
+		_interact_action_consumed = false
 		var hit = raycast.get_collider()
 		if hit:
 			if hit.is_in_group("brooms"):
 				_pick_up_tool(hit, "broom")
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("mops"):
 				_pick_up_tool(hit, "mop")
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("trash_bags"):
 				_pick_up_tool(hit, "trash_bag")
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
-			# — Recoger basura con la bolsa equipada —
 			elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
 				_collect_trash_with_bag(hit)
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
 			elif hit.is_in_group("bulbs"):
 				var bulb_type = "burnt_bulb" if hit.is_in_group("burnt_bulbs") else "bulb"
 				_pick_up_tool(hit, bulb_type)
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
 		var interacted = interact_cast.get_collider()
@@ -219,7 +231,14 @@ func _input(event: InputEvent) -> void:
 				target = target.get_parent()
 			if target.has_method("action_use"):
 				target.action_use()
+				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
+	
+	if Input.is_action_just_released("interact"):
+		box_hold_target = null
+		box_hold_timer = 0.0
+		box_picked_this_hold = false
+		_interact_action_consumed = false
 	
 	if Input.is_action_just_pressed("drop"):
 		drop_current_tool()
@@ -236,9 +255,17 @@ func _input(event: InputEvent) -> void:
 	# Click izquierdo → usar herramienta o agarrar basura
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			if equipped_item and not tool_on_cooldown:
+			var interacted = interact_cast.get_collider()
+			var box_target = interacted
+			if box_target and not box_target.is_in_group("order_box") and box_target.get_parent() and box_target.get_parent().is_in_group("order_box"):
+				box_target = box_target.get_parent()
+
+			if box_target and box_target.is_in_group("order_box") and box_target != held_box:
+				box_target.toggle_open()
+				get_viewport().set_input_as_handled()
+			elif equipped_item and not tool_on_cooldown:
 				_use_equipped_tool()
-			elif not equipped_item and not held_box:
+			elif not equipped_item:
 				_try_grab_trash()
 		else:
 			_release_grabbed_object()
@@ -252,8 +279,8 @@ func _input(event: InputEvent) -> void:
 
 # ─── CAMERA TRANSITIONS ───────────────────────────────────────────────────────
 
-func enter_minigame_camera(target: Camera3D) -> void:
-	_tween_to_camera(target)
+func enter_minigame_camera(target: Camera3D, on_finished: Callable = Callable()) -> void:
+	_tween_to_camera(target, on_finished)
 
 func exit_minigame_camera(on_finished: Callable = Callable()) -> void:
 	_tween_to_camera(cam, on_finished)
@@ -335,17 +362,18 @@ func consume_item(item_type: String) -> bool:
 	return false
 
 func _pick_up_tool(tool_node: RigidBody3D, type: String) -> void:
+	if held_box:
+		drop_held_box()
 	give_item(tool_node, type)
 
 # Llamado por la hotbar al cambiar de slot
 func equip_item(tool_node, type: String) -> void:
-	# Desconectar el ítem actual de la mano (volver invisible / desactivar)
+	if held_box:
+		drop_held_box()
 	if equipped_item:
 		_detach_from_hand()
-
 	if tool_node == null:
 		return
-
 	_attach_to_hand(tool_node, type)
 
 func _attach_to_hand(tool_node: RigidBody3D, type: String) -> void:
@@ -384,10 +412,11 @@ func pick_up_box(box: RigidBody3D) -> void:
 	if held_box:
 		return
 	if equipped_item:
-		_detach_from_hand()   # no tener herramienta + caja al mismo tiempo
+		_detach_from_hand()
 
 	held_box = box
-	box.freeze = true
+	box.set_held(true)
+	box.freeze = true  
 	box.set_collision_layer_value(1, false)
 	box.set_collision_mask_value(1, false)
 	box.reparent(order_box_marker)
@@ -404,11 +433,11 @@ func drop_held_box(consumed: bool = false) -> void:
 		box.queue_free()
 		return
 
+	box.set_held(false)
+	box.freeze = false  
 	box.reparent(get_tree().current_scene)
 	var drop_offset = -cam.global_transform.basis.z * 1.2 + Vector3(0, 0.3, 0)
 	box.global_transform.origin = cam.global_transform.origin + drop_offset
-	box.freeze = false
-	box.visible = true
 	box.set_collision_layer_value(1, true)
 	box.set_collision_mask_value(1, true)
 	box.apply_central_impulse(-cam.global_transform.basis.z * 2.0)
@@ -694,6 +723,11 @@ func _update_interact_hint() -> void:
 			interact_hint.text = "[Click] Agarrar"
 			interact_hint.visible = true
 			return
+		elif hit.is_in_group("order_box"):
+			var accion = "Cerrar" if hit.is_open else "Abrir"
+			interact_hint.text = "[Click] Abrir/Cerrar — [Mantené E] Agarrar"
+			interact_hint.visible = true
+			return
  
 	# Chequear interact_cast (interactables)
 	if interacted:
@@ -890,3 +924,25 @@ func discard_equipped_item() -> void:
 	bag_fill_bar.hide_bar()
 	hotbar.remove_item_from_slot(slot)
 	item.queue_free()
+	
+func _handle_box_hold(delta: float) -> void:
+	if held_box:
+		return
+	var interacted = interact_cast.get_collider()
+	var target = interacted
+	if target and not target.is_in_group("order_box") and target.get_parent() and target.get_parent().is_in_group("order_box"):
+		target = target.get_parent()
+
+	if target and target.is_in_group("order_box") and Input.is_action_pressed("interact"):
+		if box_hold_target != target:
+			box_hold_target = target
+			box_hold_timer = 0.0
+			box_picked_this_hold = false
+		box_hold_timer += delta
+		if box_hold_timer >= BOX_HOLD_TIME and not box_picked_this_hold:
+			pick_up_box(target)
+			box_picked_this_hold = true
+	else:
+		box_hold_target = null
+		box_hold_timer = 0.0
+		box_picked_this_hold = false

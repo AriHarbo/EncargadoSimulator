@@ -72,7 +72,7 @@ func _fill_from_box(box: Node3D) -> void:
 		OrderManager.complete_order()
 		player.show_message("¡Contenedor recargado!")
 	else:
-		player.show_message("Recargado: quedan %d bolsas en la caja" % box.bag_count)
+		player.show_message("Recargado: quedan %d bolsas en la caja" % box.get_quantity())
 		
 func _update_label() -> void:
 	if stock_label:
