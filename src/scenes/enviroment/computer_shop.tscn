@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://boxhsbo1q1hpq"]
+[gd_scene load_steps=9 format=3 uid="uid://boxhsbo1q1hpq"]
 
 [ext_resource type="Script" uid="uid://h5npgsn4pnh0" path="res://src/scripts/enviroment/shop_computer.gd" id="1_sc"]
+[ext_resource type="Script" uid="uid://c2eb0mbi31tuk" path="res://src/scripts/ui/desktop_ui.gd" id="2_sq8cr"]
+[ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/ui/shop_ui.tscn" id="3_433ft"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_monitor"]
 size = Vector3(0.55, 0.4, 0.05)
@@ -17,10 +19,13 @@ albedo_color = Color(0.25, 0.25, 0.28, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_body"]
 size = Vector3(0.55, 0.5, 0.35)
 
-[node name="ComputerShop" type="StaticBody3D" groups=["Interactable"]]
+[node name="ComputerShop" type="StaticBody3D" node_paths=PackedStringArray("shop_ui", "desktop_ui", "computer_camera") groups=["Interactable"]]
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_sc")
+shop_ui = NodePath("DesktopUI/ShopUI")
+desktop_ui = NodePath("DesktopUI")
+computer_camera = NodePath("ComputerCamera")
 
 [node name="Monitor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.05)
@@ -40,3 +45,88 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.1)
 billboard = 1
 text = "STORE"
 font_size = 48
+
+[node name="ComputerCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.764386, 0.49233)
+
+[node name="DesktopUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("shop_ui")]
+visible = false
+script = ExtResource("2_sq8cr")
+shop_ui = NodePath("ShopUI")
+
+[node name="Control" type="Control" parent="DesktopUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelMonitor" type="Panel" parent="DesktopUI/Control"]
+custom_minimum_size = Vector2(800, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BtnTienda" type="Button" parent="DesktopUI/Control/PanelMonitor"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -102.5
+offset_top = -15.5
+offset_right = -41.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Tienda
+"
+
+[node name="BtnCamaras" type="Button" parent="DesktopUI/Control/PanelMonitor"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.0
+offset_top = -15.5
+offset_right = 38.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+disabled = true
+text = "Camaras
+"
+
+[node name="BtnCasino" type="Button" parent="DesktopUI/Control/PanelMonitor"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 41.0
+offset_top = -15.5
+offset_right = 101.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+disabled = true
+text = "Casino"
+
+[node name="ShopUI" parent="DesktopUI" instance=ExtResource("3_433ft")]
+layer = 2
+
+[connection signal="pressed" from="DesktopUI/Control/PanelMonitor/BtnTienda" to="DesktopUI" method="_on_btn_tienda_pressed"]

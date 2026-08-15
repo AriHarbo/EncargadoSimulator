@@ -1,23 +1,106 @@
-[gd_scene load_steps=5 format=3 uid="uid://caciteqcaqb8p"]
+[gd_scene load_steps=13 format=3 uid="uid://caciteqcaqb8p"]
 
 [ext_resource type="Script" uid="uid://wk2lsu8mp33c" path="res://src/scripts/props/order_box.gd" id="1_rjwpe"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_2nqqk"]
-size = Vector3(0.5, 0.5, 0.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2nqqk"]
-albedo_color = Color(0.956373, 0.72503, 0.405263, 1)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_rjwpe"]
-size = Vector3(0.5, 0.5, 0.6)
+size = Vector3(0.5, 0.02, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v7pfq"]
+size = Vector3(0.5, 0.32, 0.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8yshc"]
+size = Vector3(0.02, 0.32, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4nqma"]
+size = Vector3(0.5, 0.02, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v7pfq"]
+albedo_color = Color(1, 0.749434, 0.506724, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8r22n"]
+size = Vector3(0.5, 0.32, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cnwaq"]
+size = Vector3(0.5, 0.32, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qe4h7"]
+size = Vector3(0.02, 0.32, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wmab6"]
+size = Vector3(0.02, 0.32, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v7pfq"]
+size = Vector3(0.25, 0.03, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8yshc"]
+size = Vector3(0.25, 0.03, 0.4)
 
 [node name="OrderBox" type="RigidBody3D"]
 collision_layer = 3
 script = ExtResource("1_rjwpe")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_2nqqk")
-surface_material_override/0 = SubResource("StandardMaterial3D_2nqqk")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="BottomShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 shape = SubResource("BoxShape3D_rjwpe")
+
+[node name="WallFrontShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.19)
+shape = SubResource("BoxShape3D_v7pfq")
+
+[node name="WallBackShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.19)
+shape = SubResource("BoxShape3D_8yshc")
+
+[node name="WallLeftShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24, 0, 0)
+shape = SubResource("BoxShape3D_8yshc")
+
+[node name="WallRightShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, 0, 0)
+shape = SubResource("BoxShape3D_8yshc")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Bottom" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+mesh = SubResource("BoxMesh_4nqma")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="WallFront" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.19)
+mesh = SubResource("BoxMesh_8r22n")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="WallBack" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.19)
+mesh = SubResource("BoxMesh_cnwaq")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="WallLeft" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24, 0, 0)
+mesh = SubResource("BoxMesh_qe4h7")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="WallRight" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, 0, 0)
+mesh = SubResource("BoxMesh_wmab6")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="LidLeftPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.16, 0)
+
+[node name="LidLeft" type="MeshInstance3D" parent="LidLeftPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125, 0.015, 0)
+mesh = SubResource("BoxMesh_v7pfq")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="LidRightPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.16, 0)
+
+[node name="LidRight" type="MeshInstance3D" parent="LidRightPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, 0.015, 0)
+mesh = SubResource("BoxMesh_8yshc")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7pfq")
+
+[node name="Contents" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)

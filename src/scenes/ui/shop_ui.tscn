@@ -1,13 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvl8uhi7q6par"]
+[gd_scene load_steps=6 format=3 uid="uid://bvl8uhi7q6par"]
 
 [ext_resource type="Script" uid="uid://bf52nrahux0d6" path="res://src/scripts/ui/shop_ui.gd" id="1_su"]
+[ext_resource type="Script" uid="uid://d3qjkygdb5q57" path="res://src/scripts/resources/shop_item.gd" id="2_jldyj"]
+[ext_resource type="Resource" uid="uid://c8ii3uhv3fy33" path="res://src/resources/shop_items/bolsas_basura.tres" id="3_4yil1"]
+[ext_resource type="Resource" uid="uid://no0l1tud2yx4" path="res://src/resources/shop_items/bombillas.tres" id="4_vaivf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8vh2q"]
+bg_color = Color(0.0165517, 0.0165517, 0.0165517, 1)
 
 [node name="ShopUI" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_su")
+items = Array[ExtResource("2_jldyj")]([ExtResource("3_4yil1"), ExtResource("4_vaivf")])
 
 [node name="Panel" type="Panel" parent="."]
-custom_minimum_size = Vector2(360, 220)
+custom_minimum_size = Vector2(800, 500)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -19,6 +26,7 @@ offset_right = 180.0
 offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8vh2q")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
@@ -38,21 +46,18 @@ layout_mode = 2
 
 [node name="MoneyLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-text = "Money: $0"
-
-[node name="PriceLabel" type="Label" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "Trash bag: $20"
-
-[node name="BuyButton" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "Buy"
-
-[node name="HintLabel" type="Label" parent="Panel"]
-layout_mode = 2
-offset_left = -3.0
-offset_top = 195.0
-offset_right = 357.0
-offset_bottom = 218.0
-text = "[E] Close"
+text = "$0  "
 horizontal_alignment = 2
+
+[node name="SlotsContainer" type="VBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
