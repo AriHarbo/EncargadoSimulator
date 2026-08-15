@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b2ot2ntp34wwj"]
+[gd_scene load_steps=22 format=3 uid="uid://b2ot2ntp34wwj"]
 
 [ext_resource type="PackedScene" uid="uid://dae78dvv8hlq5" path="res://src/scenes/player/Player.tscn" id="1_icq2k"]
 [ext_resource type="PackedScene" uid="uid://c2q0t3i3cerw7" path="res://src/scenes/tools/mop.tscn" id="2_yw4tt"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://df0m7nve7e350" path="res://src/scenes/cleanables/blood_stain.tscn" id="4_sahxy"]
 [ext_resource type="PackedScene" uid="uid://cbh376h7jfa2y" path="res://src/scenes/tools/bucket.tscn" id="5_vipvk"]
 [ext_resource type="PackedScene" uid="uid://rjj1junjy0u8" path="res://src/scenes/cleanables/dirtiness.tscn" id="6_e5wkp"]
+[ext_resource type="Texture2D" uid="uid://dukjn0vsv6yih" path="res://src/assets/texture_09.png" id="7_siowc"]
 [ext_resource type="PackedScene" uid="uid://x0518latqxdb" path="res://src/scenes/props/bombilla.tscn" id="7_y37dd"]
 [ext_resource type="PackedScene" uid="uid://cvuqbhco1rki3" path="res://src/scenes/enviroment/socket_bombilla.tscn" id="8_hflk7"]
 [ext_resource type="PackedScene" uid="uid://drakaysefbpol" path="res://src/scenes/tools/trash_bag.tscn" id="9_lt52i"]
@@ -15,9 +16,11 @@
 [ext_resource type="PackedScene" uid="uid://blk4mkorve8vn" path="res://src/scenes/enviroment/elevator/elevator_floor_door.tscn" id="13_bvawx"]
 [ext_resource type="PackedScene" uid="uid://bvl8uhi7q6par" path="res://src/scenes/ui/shop_ui.tscn" id="14_lgv4n"]
 [ext_resource type="PackedScene" uid="uid://u1775i7m7517" path="res://src/scenes/enviroment/dumpster.tscn" id="15_t5rbl"]
+[ext_resource type="PackedScene" uid="uid://bm37wbyvd2umg" path="res://src/scenes/props/trash.tscn" id="16_yw4tt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_276cp"]
-albedo_color = Color(0.141176, 0.454902, 0, 1)
+albedo_texture = ExtResource("7_siowc")
+uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d8eax"]
 albedo_color = Color(1, 1, 0, 1)
@@ -141,3 +144,15 @@ elevator_path = NodePath("../Elevator")
 
 [node name="dumpster" parent="." instance=ExtResource("15_t5rbl")]
 transform = Transform3D(-0.0186041, 0, -0.999827, 0, 1, 0, 0.999827, 0, -0.0186041, -4.97283, 0.0298779, 7.08942)
+
+[node name="Trash" parent="." instance=ExtResource("16_yw4tt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.84597, 0.467777, 4.34676)
+
+[node name="Trash2" parent="." instance=ExtResource("16_yw4tt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.84597, 0.467777, 3.47424)
+
+[node name="Trash3" parent="." instance=ExtResource("16_yw4tt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.84597, 0.467777, 3.88441)
+
+[node name="Trash4" parent="." instance=ExtResource("16_yw4tt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.84597, 0.467777, 4.86801)

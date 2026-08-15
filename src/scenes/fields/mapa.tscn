@@ -323,7 +323,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.92457, 0.233759, 9.25912)
 ring_sound = null
 
 [node name="ShopUI" parent="." instance=ExtResource("12_m6f5u")]
-script = null
 
 [node name="Trash" parent="." instance=ExtResource("13_23hao")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.64269, 0.471683, 2.94865)
