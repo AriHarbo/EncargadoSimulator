@@ -6,6 +6,9 @@ extends CanvasLayer
 var hotbar_items := [null, null, null, null, null]
 var selected_slot := 0
 
+# Máximo de unidades por pila según el tipo de ítem
+const MAX_STACK_BY_TYPE := { "clean_towel": 4, "dirty_towel": 4 }
+
 signal slot_changed(item_node, item_type)
 
 func _ready() -> void:
@@ -115,6 +118,9 @@ func try_add_item(node: RigidBody3D, type: String) -> bool:
 		if entry != null and entry["type"] == type and is_instance_valid(entry["node"]):
 			var qty = entry["node"].get("quantity")
 			if qty != null:
+				var max_stack: int = MAX_STACK_BY_TYPE.get(type, 99)
+				if qty >= max_stack:
+					return false
 				entry["node"].quantity = qty + 1
 				refresh_slots()
 				return true

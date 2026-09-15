@@ -11,6 +11,7 @@ signal tarea_completada(tarea: Task)
 signal tarea_fallada(tarea: Task)
 signal jornada_terminada(resumen: Dictionary)
 signal don_llama(llamada: BossCall)
+signal objetivo_cambiado(objetivo: String)
 
 
 # ---------------------------------------------------------------------------
@@ -47,7 +48,7 @@ var _tareas_falladas: Array[Task] = []
 
 # Por cada tarea que requiere hablar con varios NPCs, la lista de npc_id necesarios
 var requisitos_npc_tarea: Dictionary = {
-	"tarea_01_presentaciones": ["npc_bartender", "npc_recepcionista"],
+	"presentaciones": ["npc_bartender", "npc_recepcionista"],
 }
 
 # Progreso actual: tarea_id -> Array de npc_id ya hablados
@@ -59,6 +60,15 @@ var _progreso_npc_tarea: Dictionary = {}
 # ---------------------------------------------------------------------------
 
 var llamadas_del_don: Array[BossCall] = []
+
+
+# ---------------------------------------------------------------------------
+# OBJETIVO ACTUAL (UI de objetivo)
+# ---------------------------------------------------------------------------
+
+# Texto del objetivo que muestra la UI. Se setea solo (primer tarea de la
+# llamada del Don) o manualmente desde el taskboard. Es solo visual.
+var objetivo_actual: String = ""
 
 
 # ---------------------------------------------------------------------------
@@ -120,6 +130,7 @@ func iniciar_dia() -> void:
 	_tareas_falladas.clear()
 	tareas_asignadas.clear()
 	_progreso_npc_tarea.clear()
+	set_objetivo("")
 
 	# Resetear estado de todas las tareas del pool
 	for id in _pool_tareas:
@@ -197,6 +208,18 @@ func _revisar_activaciones() -> void:
 			emit_signal("don_llama", llamada)
 
 
+# Publico: se llama cuando termina el dialogo del Don (incoming_call), para
+# que el objetivo no cambie mientras suena/está hablando el jefe.
+# El objetivo por defecto es la PRIMERA tarea que agrega la llamada.
+func aplicar_objetivo_de_llamada(llamada: BossCall) -> void:
+	if not llamada.tareas_a_agregar.is_empty():
+		var id_tarea: String = llamada.tareas_a_agregar[0]
+		if _pool_tareas.has(id_tarea):
+			set_objetivo(_pool_tareas[id_tarea].nombre)
+			return
+	# Si la llamada no agrega tareas, se mantiene el objetivo actual.
+
+
 func _revisar_limites() -> void:
 	for tarea in _tareas_activas.duplicate():
 		if tarea.tiene_limite and hora_actual >= tarea.hora_limite:
@@ -207,6 +230,15 @@ func _revisar_limites() -> void:
 # ---------------------------------------------------------------------------
 # ACCIONES PUBLICAS
 # ---------------------------------------------------------------------------
+
+# Cambia el objetivo que muestra la UI. Lo llaman las llamadas del Don y el
+# taskboard al clickear una tarea.
+func set_objetivo(texto: String) -> void:
+	if objetivo_actual == texto:
+		return
+	objetivo_actual = texto
+	emit_signal("objetivo_cambiado", texto)
+
 
 # Llamado desde la escena al terminar el dialogo del Don.
 # Agrega las tareas indicadas al papel del jugador.

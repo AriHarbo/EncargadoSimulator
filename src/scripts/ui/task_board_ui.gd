@@ -7,6 +7,7 @@ extends CanvasLayer
 # Escena de un item de tarea — la creamos por código así que no necesita escena separada
 var _abierto: bool = false
 var _primera_vez: bool = true
+var _hbox_objetivo: HBoxContainer = null
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -55,6 +56,8 @@ func cerrar() -> void:
 # ---------------------------------------------------------------------------
 
 func _refrescar_lista() -> void:
+	_hbox_objetivo = null
+
 	# Limpiar lista anterior
 	for child in lista_tareas.get_children():
 		child.queue_free()
@@ -104,7 +107,39 @@ func _crear_item_tarea(tarea: Task) -> HBoxContainer:
 
 	hbox.add_child(icono)
 	hbox.add_child(nombre)
+
+	# Clickear una tarea la marca como objetivo actual (solo visual).
+	hbox.mouse_filter = Control.MOUSE_FILTER_STOP
+	hbox.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	hbox.gui_input.connect(_on_item_clic.bind(tarea, hbox))
+
+	if tarea.nombre == GameManager.objetivo_actual:
+		_hbox_objetivo = hbox
+		hbox.modulate = Color(1, 1, 0.65)
+
 	return hbox
+
+
+func _on_item_clic(event: InputEvent, tarea: Task, hbox: HBoxContainer) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+
+	# Clickear la tarea ya marcada la desmarca y oculta la UI de objetivo.
+	if GameManager.objetivo_actual == tarea.nombre:
+		GameManager.set_objetivo("")
+		_highlight_objetivo(null)
+		return
+
+	GameManager.set_objetivo(tarea.nombre)
+	_highlight_objetivo(hbox)
+
+
+func _highlight_objetivo(hbox: HBoxContainer) -> void:
+	if _hbox_objetivo:
+		_hbox_objetivo.modulate = Color(1, 1, 1)
+	_hbox_objetivo = hbox
+	if hbox:
+		hbox.modulate = Color(1, 1, 0.65)
 
 
 # Cuando el Jefe asigna una tarea nueva, si el papel está abierto se actualiza

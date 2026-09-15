@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://cknp73w6k8g7u"]
+
+[ext_resource type="Script" uid="uid://blccvnx20ulai" path="res://src/scripts/props/dirty_towel.gd" id="1_hm3bp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rrybj"]
+albedo_color = Color(0.356667, 0.187298, 0.107626, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bpqq0"]
+material = SubResource("StandardMaterial3D_rrybj")
+size = Vector3(0.3, 0.08, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ppjq6"]
+size = Vector3(0.3, 0.08, 0.25)
+
+[node name="DirtyTowel" type="RigidBody3D"]
+script = ExtResource("1_hm3bp")
+towel_mesh = SubResource("BoxMesh_bpqq0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ppjq6")
+
+[node name="StackRoot" type="Node3D" parent="."]
