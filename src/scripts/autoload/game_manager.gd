@@ -10,7 +10,9 @@ signal tarea_activada(tarea: Task)
 signal tarea_completada(tarea: Task)
 signal tarea_fallada(tarea: Task)
 signal jornada_terminada(resumen: Dictionary)
+signal llamada_activada(llamada: BossCall)
 signal don_llama(llamada: BossCall)
+signal objetivo_cambiado(objetivo: String)
 
 
 # ---------------------------------------------------------------------------
@@ -47,7 +49,7 @@ var _tareas_falladas: Array[Task] = []
 
 # Por cada tarea que requiere hablar con varios NPCs, la lista de npc_id necesarios
 var requisitos_npc_tarea: Dictionary = {
-	"tarea_01_presentaciones": ["npc_bartender", "npc_recepcionista"],
+	"presentaciones": ["npc_bartender", "npc_recepcionista"],
 }
 
 # Progreso actual: tarea_id -> Array de npc_id ya hablados
@@ -59,6 +61,20 @@ var _progreso_npc_tarea: Dictionary = {}
 # ---------------------------------------------------------------------------
 
 var llamadas_del_don: Array[BossCall] = []
+
+# Llamada ya "activada" (emitio llamada_activada) pero que todavia no sueno:
+# espera delay_llamada segundos reales antes de emitir don_llama.
+var _llamada_pendiente: BossCall = null
+var _tiempo_hasta_llamada: float = 0.0
+
+
+# ---------------------------------------------------------------------------
+# OBJETIVO ACTUAL (UI de objetivo)
+# ---------------------------------------------------------------------------
+
+# Texto del objetivo que muestra la UI. Se setea solo (primer tarea de la
+# llamada del Don) o manualmente desde el taskboard. Es solo visual.
+var objetivo_actual: String = ""
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +101,7 @@ func _cargar_recursos() -> void:
 	# Tareas
 	var tareas_raw: Array[Task] = [
 		load("res://src/resources/tareas/dia_01/tarea_01_presentaciones.tres"),
-		load("res://src/resources/tareas/dia_01/tarea_02_cuarto_conserje.tres"),
+		load("res://src/resources/tareas/dia_01/tarea_02_conocer_cuarto.tres"),
 		load("res://src/resources/tareas/dia_01/tarea_03_habitacion_1.tres"),
 		load("res://src/resources/tareas/dia_01/tarea_04_habitacion_2.tres"),
 		load("res://src/resources/tareas/dia_01/tarea_05_foco.tres"),
@@ -120,6 +136,7 @@ func iniciar_dia() -> void:
 	_tareas_falladas.clear()
 	tareas_asignadas.clear()
 	_progreso_npc_tarea.clear()
+	set_objetivo("")
 
 	# Resetear estado de todas las tareas del pool
 	for id in _pool_tareas:
@@ -132,6 +149,10 @@ func iniciar_dia() -> void:
 			continue
 		llamada.ya_se_activo = false
 
+	# Limpiar llamada pendiente
+	_llamada_pendiente = null
+	_tiempo_hasta_llamada = 0.0
+
 
 # ---------------------------------------------------------------------------
 # LOOP PRINCIPAL
@@ -141,12 +162,24 @@ func _process(delta: float) -> void:
 	if not dia_activo:
 		return
 
+	_descargar_llamada_pendiente(delta)
 	_avanzar_tiempo(delta)
 	_revisar_activaciones()
 	_revisar_limites()
 
 	if hora_actual >= HORA_FIN:
 		_terminar_dia()
+
+
+func _descargar_llamada_pendiente(delta: float) -> void:
+	if _llamada_pendiente == null:
+		return
+	_tiempo_hasta_llamada -= delta
+	if _tiempo_hasta_llamada > 0.0:
+		return
+	var llamada: BossCall = _llamada_pendiente
+	_llamada_pendiente = null
+	emit_signal("don_llama", llamada)
 
 
 func _avanzar_tiempo(delta: float) -> void:
@@ -194,7 +227,30 @@ func _revisar_activaciones() -> void:
 
 		if debe_activarse:
 			llamada.ya_se_activo = true
-			emit_signal("don_llama", llamada)
+			emit_signal("llamada_activada", llamada)
+			_programar_llamada(llamada)
+
+
+# Si la llamada tiene delay_llamada, suena unos segundos despues de activarse
+# (asi el mundo puede reaccionar antes: p.ej. se quema el foco y luego llama el Don).
+func _programar_llamada(llamada: BossCall) -> void:
+	if llamada.delay_llamada <= 0.0:
+		emit_signal("don_llama", llamada)
+		return
+	_llamada_pendiente = llamada
+	_tiempo_hasta_llamada = llamada.delay_llamada
+
+
+# Publico: se llama cuando termina el dialogo del Don (incoming_call), para
+# que el objetivo no cambie mientras suena/está hablando el jefe.
+# El objetivo por defecto es la PRIMERA tarea que agrega la llamada.
+func aplicar_objetivo_de_llamada(llamada: BossCall) -> void:
+	if not llamada.tareas_a_agregar.is_empty():
+		var id_tarea: String = llamada.tareas_a_agregar[0]
+		if _pool_tareas.has(id_tarea):
+			set_objetivo(_pool_tareas[id_tarea].nombre)
+			return
+	# Si la llamada no agrega tareas, se mantiene el objetivo actual.
 
 
 func _revisar_limites() -> void:
@@ -207,6 +263,15 @@ func _revisar_limites() -> void:
 # ---------------------------------------------------------------------------
 # ACCIONES PUBLICAS
 # ---------------------------------------------------------------------------
+
+# Cambia el objetivo que muestra la UI. Lo llaman las llamadas del Don y el
+# taskboard al clickear una tarea.
+func set_objetivo(texto: String) -> void:
+	if objetivo_actual == texto:
+		return
+	objetivo_actual = texto
+	emit_signal("objetivo_cambiado", texto)
+
 
 # Llamado desde la escena al terminar el dialogo del Don.
 # Agrega las tareas indicadas al papel del jugador.
@@ -274,6 +339,13 @@ func _buscar_tarea_activa(id: String) -> Task:
 		if tarea.id == id:
 			return tarea
 	return null
+
+
+# Publico: dice si una tarea esta actualmente activa (asignada y sin terminar).
+# Lo usan las areas de limpieza de habitaciones para saber si pueden mostrar
+# sus sub-objetivos y completar la task.
+func esta_tarea_activa(id: String) -> bool:
+	return _buscar_tarea_activa(id) != null
 
 
 # ---------------------------------------------------------------------------

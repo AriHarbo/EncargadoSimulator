@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://2miawbpu4njd"]
+
+[ext_resource type="Script" uid="uid://d8t3kx5vm1qcw" path="res://src/scripts/props/bus.gd" id="1_bus"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cuerpo"]
+size = Vector3(2.4, 2, 6.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ventana"]
+size = Vector3(0.12, 0.7, 4.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rueda"]
+size = Vector3(0.36, 0.62, 0.52)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bus"]
+albedo_color = Color(0.85, 0.47, 0.14, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vidrio"]
+albedo_color = Color(0.22, 0.32, 0.42, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_goma"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[node name="Bus" type="Node3D"]
+script = ExtResource("1_bus")
+
+[node name="Cuerpo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("StandardMaterial3D_bus")
+mesh = SubResource("BoxMesh_cuerpo")
+
+[node name="VentanaSur" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.35, 0)
+material_override = SubResource("StandardMaterial3D_vidrio")
+mesh = SubResource("BoxMesh_ventana")
+
+[node name="VentanaNorte" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.35, 0)
+material_override = SubResource("StandardMaterial3D_vidrio")
+mesh = SubResource("BoxMesh_ventana")
+
+[node name="Rueda_NE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 0.33, 2.3)
+material_override = SubResource("StandardMaterial3D_goma")
+mesh = SubResource("BoxMesh_rueda")
+
+[node name="Rueda_NO" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 0.33, 2.3)
+material_override = SubResource("StandardMaterial3D_goma")
+mesh = SubResource("BoxMesh_rueda")
+
+[node name="Rueda_SE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 0.33, -2.3)
+material_override = SubResource("StandardMaterial3D_goma")
+mesh = SubResource("BoxMesh_rueda")
+
+[node name="Rueda_SO" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 0.33, -2.3)
+material_override = SubResource("StandardMaterial3D_goma")
+mesh = SubResource("BoxMesh_rueda")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+volume_db = -4.0

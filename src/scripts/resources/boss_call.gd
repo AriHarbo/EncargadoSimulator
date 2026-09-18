@@ -13,6 +13,9 @@ enum TipoActivacion {
 @export var tipo_activacion: TipoActivacion = TipoActivacion.POR_TIEMPO
 @export var hora_activacion: float = 0.0       # Solo si tipo es POR_TIEMPO
 @export var tarea_activadora: String = ""       # ID de la tarea, solo si tipo es POR_TAREA
+
+# Segundos reales que tarda el telefono en sonar desde que se "activa" la llamada.
+@export var delay_llamada: float = 0.0
  
 # -- Dialogo --
 # Cada String del array es una linea separada. El jugador aprieta E para avanzar.

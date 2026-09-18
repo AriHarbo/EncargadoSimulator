@@ -130,3 +130,6 @@ text = "Casino"
 layer = 2
 
 [connection signal="pressed" from="DesktopUI/Control/PanelMonitor/BtnTienda" to="DesktopUI" method="_on_btn_tienda_pressed"]
+[connection signal="pressed" from="DesktopUI/ShopUI/Panel/QuitButton" to="." method="_on_quit_button_pressed"]
+
+[editable path="DesktopUI/ShopUI"]

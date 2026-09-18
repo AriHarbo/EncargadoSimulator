@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://r4bx2qj2j6xc"]
+
+[ext_resource type="Script" uid="uid://cdj53uiocpdgh" path="res://src/scripts/enviroment/lavarropas.gd" id="1_mq"]
+[ext_resource type="Script" uid="uid://lnl0qicaa33" path="res://src/scripts/enviroment/lavarropas_boton.gd" id="2_qfbab"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_f0vms"]
+size = Vector3(0.9, 1, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ohtkk"]
+size = Vector3(0.9, 1, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qfbab"]
+size = Vector3(0.9, 1, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sjspm"]
+size = Vector3(0.2, 0.15, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vy602"]
+albedo_color = Color(0.381703, 0.381703, 0.381703, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xysph"]
+size = Vector3(0.2, 0.15, 0.1)
+
+[node name="Lavarropas" type="Node3D"]
+
+[node name="LavarropasBody" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LavarropasBody"]
+mesh = SubResource("BoxMesh_f0vms")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LavarropasBody"]
+shape = SubResource("BoxShape3D_ohtkk")
+
+[node name="InteractArea" type="StaticBody3D" parent="."]
+collision_layer = 2
+script = ExtResource("1_mq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.281214)
+shape = SubResource("BoxShape3D_qfbab")
+
+[node name="DrumAnchor" type="Node3D" parent="InteractArea"]
+
+[node name="BotonLavar" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.209111, 0)
+collision_layer = 2
+script = ExtResource("2_qfbab")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BotonLavar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.202853, 0.505345, 0.420155)
+mesh = SubResource("BoxMesh_sjspm")
+surface_material_override/0 = SubResource("StandardMaterial3D_vy602")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BotonLavar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.203, 0.505, 0.429871)
+shape = SubResource("BoxShape3D_xysph")

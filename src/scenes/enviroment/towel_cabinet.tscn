@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://6gyqh52omd1n"]
+
+[ext_resource type="Script" uid="uid://dfyslq13x1saj" path="res://src/scripts/enviroment/towel_cabinet.gd" id="1_fm7k8"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gs4pl"]
+size = Vector3(0.5, 0.05, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr80o"]
+albedo_color = Color(0.30389, 0.190554, 0.088321, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jdrml"]
+size = Vector3(0.5, 0.05, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gnx7p"]
+size = Vector3(0.427, 0.3, 0.2)
+
+[node name="TowelCabinet" type="Node3D"]
+
+[node name="CabinetBody" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0585126, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CabinetBody"]
+mesh = SubResource("BoxMesh_gs4pl")
+surface_material_override/0 = SubResource("StandardMaterial3D_vr80o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CabinetBody"]
+shape = SubResource("BoxShape3D_jdrml")
+
+[node name="InteractArea" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.061996, 0.15, 0)
+collision_layer = 2
+script = ExtResource("1_fm7k8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+shape = SubResource("BoxShape3D_gnx7p")
+
+[node name="MeshAnchor" type="Node3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)

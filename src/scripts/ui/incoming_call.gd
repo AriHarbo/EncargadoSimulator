@@ -59,5 +59,6 @@ func atender() -> void:
 		llamada.lineas,
 		func():
 			GameManager.dia_activo = true
+			GameManager.aplicar_objetivo_de_llamada(llamada)
 			GameManager.asignar_tareas(llamada.tareas_a_agregar)
 	)

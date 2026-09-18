@@ -21,7 +21,10 @@ enum MiniAction { NONE, REMOVE, INSTALL }
 @onready var minigame_camera: Camera3D = $MinigameCamera
 @onready var prompt: Label = $MinigameUI/Prompt
 
-var state := BulbState.BURNT
+# Tarea que se completa al instalar una bombilla nueva en este socket ("" = ninguna).
+@export var tarea_id: String = ""
+
+var state := BulbState.NEW
 var minigame_active := false
 var minigame_action := MiniAction.NONE
 var turn_count := 0
@@ -30,6 +33,17 @@ var _turn_tween: Tween
 func _ready() -> void:
 	add_to_group("Interactable")
 	add_to_group("luz_sockets")
+	GameManager.llamada_activada.connect(_on_llamada_activada)
+	_update_state()
+
+# La bombilla se quema cuando el Don inicia la llamada que agrega esta tarea:
+# el foco ya esta roto unos segundos antes de que suene el telefono (delay_llamada).
+func _on_llamada_activada(llamada: BossCall) -> void:
+	if tarea_id != "" and llamada.tareas_a_agregar.has(tarea_id) and state != BulbState.BURNT:
+		_quemar()
+
+func _quemar() -> void:
+	state = BulbState.BURNT
 	_update_state()
 
 func _input(event: InputEvent) -> void:
@@ -144,6 +158,8 @@ func _remove_bulb(player: Node) -> void:
 func _install_bulb() -> void:
 	state = BulbState.NEW
 	_update_state()
+	if tarea_id != "":
+		GameManager.completar_tarea(tarea_id)
 
 func _update_state() -> void:
 	bulb_visual.visible = state == BulbState.NEW

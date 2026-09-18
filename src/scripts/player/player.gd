@@ -17,6 +17,7 @@ var rotation_x := 0.0
 @onready var bag_fill_bar = $UI/BagFillBar
 @onready var interact_hint = $UI/InteractHint
 @onready var money_label = $UI/MoneyLabel
+@onready var clock_label = $UI/ClockLabel
 
 # MONEY
 @export var money := 100
@@ -100,6 +101,8 @@ func _ready() -> void:
 	add_to_group("player")
 	interact_hint.visible = false
 	_update_money_label()
+	GameManager.hora_cambiada.connect(_on_hora_cambiada)
+	_update_clock_label()
 
 # ─── MONEY ────────────────────────────────────────────────────────────────────
 
@@ -117,6 +120,13 @@ func spend_money(amount: int) -> bool:
 func _update_money_label() -> void:
 	if money_label:
 		money_label.text = "$%d" % money
+
+func _on_hora_cambiada(_hora: float) -> void:
+	_update_clock_label()
+
+func _update_clock_label() -> void:
+	if clock_label:
+		clock_label.text = GameManager.hora_como_string()
 
 func _physics_process(delta: float) -> void:
 	if get_tree().get_first_node_in_group("minigame_active"):
@@ -188,13 +198,13 @@ func _input(event: InputEvent) -> void:
 			_place_bucket()
 			get_viewport().set_input_as_handled()
 			return
-		if Input.is_action_just_pressed("interact"):
+		if event.is_action_pressed("interact") and not event.is_echo():
 			_cancel_bucket_placement()
 			get_viewport().set_input_as_handled()
 			return
 	
 	# E → intentar recoger herramienta o interactuar
-	if Input.is_action_just_pressed("interact"):
+	if event.is_action_pressed("interact") and not event.is_echo():
 		_interact_action_consumed = false
 		var hit = raycast.get_collider()
 		if hit:
@@ -221,6 +231,20 @@ func _input(event: InputEvent) -> void:
 			elif hit.is_in_group("bulbs"):
 				var bulb_type = "burnt_bulb" if hit.is_in_group("burnt_bulbs") else "bulb"
 				_pick_up_tool(hit, bulb_type)
+				_interact_action_consumed = true
+				get_viewport().set_input_as_handled()
+				return
+			elif hit.is_in_group("clean_towels"):
+				var picked = _pick_up_tool(hit, "clean_towel")
+				if not picked:
+					show_message("No podes cargar más toallas")
+				_interact_action_consumed = true
+				get_viewport().set_input_as_handled()
+				return
+			elif hit.is_in_group("dirty_towels"):
+				var picked = _pick_up_tool(hit, "dirty_towel")
+				if not picked:
+					show_message("No podes cargar más toallas sucias")
 				_interact_action_consumed = true
 				get_viewport().set_input_as_handled()
 				return
@@ -361,10 +385,10 @@ func consume_item(item_type: String) -> bool:
 			return true
 	return false
 
-func _pick_up_tool(tool_node: RigidBody3D, type: String) -> void:
+func _pick_up_tool(tool_node: RigidBody3D, type: String) -> bool:
 	if held_box:
 		drop_held_box()
-	give_item(tool_node, type)
+	return give_item(tool_node, type)
 
 # Llamado por la hotbar al cambiar de slot
 func equip_item(tool_node, type: String) -> void:
@@ -388,7 +412,10 @@ func _attach_to_hand(tool_node: RigidBody3D, type: String) -> void:
 	tool_node.set_collision_mask_value(1, false)
 
 	var target_marker = order_box_marker if type == "order_box" else hand_position
-	tool_node.reparent(hand_position)
+	if tool_node.is_inside_tree():
+		tool_node.reparent(hand_position)
+	else:
+		hand_position.add_child(tool_node)
 	tool_node.transform = Transform3D.IDENTITY
 	tool_node.visible = true
 	
@@ -712,7 +739,7 @@ func _update_interact_hint() -> void:
 			interact_hint.visible = true
 			return
 		elif hit.is_in_group("TrashItem") and equipped_type == "trash_bag":
-			interact_hint.text = "[Click] Recoger basura"
+			interact_hint.text = "[E] Recoger basura"
 			interact_hint.visible = true
 			return
 		elif hit.is_in_group("bulbs"):
@@ -726,6 +753,14 @@ func _update_interact_hint() -> void:
 		elif hit.is_in_group("order_box"):
 			var accion = "Cerrar" if hit.is_open else "Abrir"
 			interact_hint.text = "[Click] Abrir/Cerrar — [Mantené E] Agarrar"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("clean_towels"):
+			interact_hint.text = "[E] Agarrar toalla"
+			interact_hint.visible = true
+			return
+		elif hit.is_in_group("dirty_towels"):
+			interact_hint.text = "[E] Agarrar toalla sucia"
 			interact_hint.visible = true
 			return
  
