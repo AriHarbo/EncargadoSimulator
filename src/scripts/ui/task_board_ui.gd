@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func abrir() -> void:
 	if _primera_vez:
 		_primera_vez = false
-		GameManager.asignar_tareas(["limpiar_hab1", "limpiar_hab2", "cambiar_foco"])
+		GameManager.asignar_tareas(["limpiar_hab1", "limpiar_hab2"])
 	
 	_abierto = true
 	_refrescar_lista()

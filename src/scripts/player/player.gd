@@ -17,6 +17,7 @@ var rotation_x := 0.0
 @onready var bag_fill_bar = $UI/BagFillBar
 @onready var interact_hint = $UI/InteractHint
 @onready var money_label = $UI/MoneyLabel
+@onready var clock_label = $UI/ClockLabel
 
 # MONEY
 @export var money := 100
@@ -100,6 +101,8 @@ func _ready() -> void:
 	add_to_group("player")
 	interact_hint.visible = false
 	_update_money_label()
+	GameManager.hora_cambiada.connect(_on_hora_cambiada)
+	_update_clock_label()
 
 # ─── MONEY ────────────────────────────────────────────────────────────────────
 
@@ -117,6 +120,13 @@ func spend_money(amount: int) -> bool:
 func _update_money_label() -> void:
 	if money_label:
 		money_label.text = "$%d" % money
+
+func _on_hora_cambiada(_hora: float) -> void:
+	_update_clock_label()
+
+func _update_clock_label() -> void:
+	if clock_label:
+		clock_label.text = GameManager.hora_como_string()
 
 func _physics_process(delta: float) -> void:
 	if get_tree().get_first_node_in_group("minigame_active"):

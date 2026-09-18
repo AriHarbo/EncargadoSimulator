@@ -4,6 +4,11 @@ extends StaticBody3D
 const TOWEL_SCENE := preload("res://src/scenes/props/clean_towel.tscn")
 const MAX_CAPACITY := 4
 
+# Señales para que otros sistemas (areas de limpieza de habitaciones) puedan
+# seguir el progreso de toallas guardadas en este armario.
+signal toalla_guardada
+signal toalla_sacada
+
 @onready var mesh_anchor: Node3D = $MeshAnchor
 
 var stored_quantity: int = 0
@@ -57,6 +62,8 @@ func _deposit_one(player) -> void:
 	else:
 		player.discard_equipped_item()
 
+	toalla_guardada.emit()
+
 func _take_one(player) -> void:
 	var towel := _new_towel(1)
 	get_tree().current_scene.add_child(towel)
@@ -67,6 +74,8 @@ func _take_one(player) -> void:
 
 	stored_quantity -= 1
 	_refresh_visual()
+
+	toalla_sacada.emit()
 
 func _new_towel(qty: int) -> RigidBody3D:
 	var towel: RigidBody3D = TOWEL_SCENE.instantiate()
